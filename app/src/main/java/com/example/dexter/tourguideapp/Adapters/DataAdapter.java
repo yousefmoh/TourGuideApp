@@ -5,11 +5,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dexter.tourguideapp.R;
 import com.example.dexter.tourguideapp.Models.SampleModel.*;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -41,7 +43,9 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
         holder.name.setText(places.get(position).getName());
         holder.description.setText(places.get(position).getDescription());
-        Toast.makeText(context,places.get(position).getName()+"",Toast.LENGTH_SHORT).show();
+        Picasso.with(context).load(places.get(position).getImageUrl()).into(holder.placeImage);
+
+     //   Toast.makeText(context,places.get(position).getName()+"",Toast.LENGTH_SHORT).show();
 
     }
 
@@ -55,11 +59,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     public class ViewHolder   extends RecyclerView.ViewHolder{
 
         private TextView name,description;
-
+        private ImageView placeImage;
         public ViewHolder(View view) {
             super(view);
             name = (TextView)view.findViewById(R.id.place_name);
             description = (TextView)view.findViewById(R.id.place_description);
+            placeImage=(ImageView)view.findViewById(R.id.imageViewPlace);
 
         }
     }

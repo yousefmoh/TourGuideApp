@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ArrayList<places> data;
     private DataAdapter adapter;
-
+    private   int Id=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         startService(new Intent(this,LocationService.class));
         SharedPreferences prefs = getSharedPreferences("Location", MODE_PRIVATE);
 
-        int Id=prefs.getInt("CurrentLocation",0);
+         Id=prefs.getInt("CurrentLocation",0);
         if(Id==2){
 
 
@@ -56,9 +56,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onResume() {
 
+        super.onResume();
+        setContentView(R.layout.activity_main);
+        SharedPreferences prefs = getSharedPreferences("Location", MODE_PRIVATE);
 
+        Id=prefs.getInt("CurrentLocation",0);
 
+        Toast.makeText(this,"On Resume",Toast.LENGTH_SHORT).show();
+
+        initViews(Id);
+
+    }
 
     private void initViews(int id){
         recyclerView = (RecyclerView)findViewById(R.id.card_recycler_view);

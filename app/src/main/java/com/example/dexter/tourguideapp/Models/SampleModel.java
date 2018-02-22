@@ -30,6 +30,16 @@ public class SampleModel {
 
         @SerializedName("description")
         private String description;
+        @SerializedName("image")
+        private  String ImageUrl;
+
+        public String getImageUrl() {
+            return ImageUrl;
+        }
+
+        public void setImageUrl(String imageUrl) {
+            ImageUrl = imageUrl;
+        }
 
         public String getName() {
             return name;
