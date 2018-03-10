@@ -43,51 +43,66 @@ public class MainActivity extends AppCompatActivity {
     private DataAdapter adapter;
     LocationManager locationManager;
     String provider;
-    private   int Id=0;//Default Nablus
+    private   int Id=0;//
+    private  int create=0;
+    private  boolean FirstTime=true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
-        checkLocationPermission();
-        start();
+
+        boolean t= checkLocationPermission();
+        SharedPreferences prefs = getSharedPreferences("Creation", MODE_PRIVATE);
+        FirstTime=prefs.getBoolean("FirstTime",true);
+        Toast.makeText(this, FirstTime+ "", Toast.LENGTH_SHORT).show();
+
+        if (FirstTime==false)
+        {
+
+             start();
+
+        }
+
+       // start();
+
+     /*   if (t)
+        {
+            start();
+        }
+*/
 
         /*
         startService(new Intent(this,LocationService.class));
         SharedPreferences prefs = getSharedPreferences("Location", MODE_PRIVATE);
 
          Id=prefs.getInt("CurrentLocation",0);
-        if(Id==2){
-
-
+         if(Id==2){
             Toast.makeText(this,"Ramallah",Toast.LENGTH_SHORT).show();
-
         }
         else if(Id==3)
         {
             Toast.makeText(this,"Nablus",Toast.LENGTH_SHORT).show();
-
         }
-        
         initViews(Id);*/
+
     }
 
      public  void start () {
 
          startService(new Intent(this,LocationService.class));
+
+
          SharedPreferences prefs = getSharedPreferences("Location", MODE_PRIVATE);
 
          Id=prefs.getInt("CurrentLocation",3);
+         Toast.makeText(this,Id+"",Toast.LENGTH_SHORT).show();
+
          if(Id==2){
-
-
              Toast.makeText(this,"Ramallah",Toast.LENGTH_SHORT).show();
-
          }
          else if(Id==3)
          {
              Toast.makeText(this,"Nablus",Toast.LENGTH_SHORT).show();
-
          }
 
          initViews(Id);
@@ -95,38 +110,45 @@ public class MainActivity extends AppCompatActivity {
      }
 
 
+
+
     @Override
     protected void onResume() {
+        super.onResume();
 
+/*
         super.onResume();
         setContentView(R.layout.activity_main);
         SharedPreferences prefs = getSharedPreferences("Location", MODE_PRIVATE);
-
         Id=prefs.getInt("CurrentLocation",3);
 
-        Toast.makeText(this,"On Resume",Toast.LENGTH_SHORT).show();
+         Toast.makeText(this,"On Resume"+create+"",Toast.LENGTH_SHORT).show();
 
-        initViews(Id);
-
+        if(create==0) {
+            initViews(Id);
+        }
+*/
     }
 
 
-    @Override
+ @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        //super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    // permission was granted, yay! Do the
-                    // location-related task you need to do.
+
                     if (ContextCompat.checkSelfPermission(this,
                             Manifest.permission.ACCESS_FINE_LOCATION)
                             == PackageManager.PERMISSION_GRANTED) {
 
                         Toast.makeText(this,"Allow",Toast.LENGTH_SHORT).show();
+                        SharedPreferences.Editor editor = getSharedPreferences("Creation", MODE_PRIVATE).edit();
+                        editor.putBoolean("FirstTime", false);
+                        editor.apply();
+
 
                         start();
 
@@ -162,16 +184,10 @@ public class MainActivity extends AppCompatActivity {
 
         Gson gson = new GsonBuilder()
                 .setLenient()
-
                 .create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.5:8080/")//simplifiedcoding.net/demos/marvel
-
-                //192.168.42.185
-                //http://192.168.0.103/tours/city_tours_places.php?id=2
-                //http://192.168.0.103/tours/tours_places.php
-
+                .baseUrl("http://snap-project.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         final RequestInterface request = retrofit.create(RequestInterface.class);
@@ -188,7 +204,6 @@ public class MainActivity extends AppCompatActivity {
 
 
                 adapter = new DataAdapter(data,getApplicationContext());
-//                Toast.makeText(getApplicationContext(),data.get(0).getName()+"",Toast.LENGTH_SHORT).show();
 
                 recyclerView.setAdapter(adapter);
             }
@@ -203,7 +218,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        Toast.makeText(getApplicationContext(),call+"",Toast.LENGTH_SHORT).show();
 
     }
 
@@ -218,16 +232,12 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
-            // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
 
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
                 new AlertDialog.Builder(this)
                         .setTitle("Location Permission")
-                        .setMessage("Please allow ")
+                        .setMessage("Please allow Location Permission ! ")
                         .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -235,6 +245,8 @@ public class MainActivity extends AppCompatActivity {
                                 ActivityCompat.requestPermissions(MainActivity.this,
                                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                                         MY_PERMISSIONS_REQUEST_LOCATION);
+                              //  start();
+
                             }
                         })
                         .create()

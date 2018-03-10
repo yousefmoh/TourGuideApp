@@ -18,6 +18,16 @@
         </activity>
         <service android:enabled="true" android:name=".Services.LocationService"/>
 
+
+        <activity android:name=".PlaceInformationActivity">
+        </activity>
+        <activity android:name=".MapPolylineActivity">
+        </activity>
+
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyCpg0kMnFXBelMQTomeQ5Ielt9__bezkZg" />
+
     </application>
 
 

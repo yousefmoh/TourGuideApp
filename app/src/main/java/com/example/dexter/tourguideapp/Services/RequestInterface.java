@@ -13,7 +13,7 @@ public interface RequestInterface {
 
 
 
-    @GET("/tours/city_tours_places/{id}")
+    @GET("/tourguideapis/city_tours_places.php/{id}")
     Call<JSONResponse> getJSON(@Query("id") int id);
 
     
