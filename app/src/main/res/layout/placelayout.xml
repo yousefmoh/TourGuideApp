@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
     <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -22,6 +28,7 @@
             android:scaleType="fitXY"
             android:layout_height="match_parent" />
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/viewB"
         android:layout_width="match_parent"
@@ -30,32 +37,150 @@
         android:background="@android:color/white"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/titleDe"
-            android:layout_marginTop="10px"
-            android:layout_width="wrap_content"
-            android:layout_gravity="center_horizontal"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="40px"
-            android:text="Description" />
+            android:layout_margin="20dp"
+            android:gravity="bottom"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/descriptionPlace"
-            android:layout_margin="10px"
-            android:layout_width="wrap_content"
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+
+                android:src="@drawable/icon_contacts" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="Name :" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text=" Sample" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="HELLLLLLLLLLLO" />
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"
+            android:gravity="bottom"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+
+                android:src="@drawable/icon_call" />
+
+            <TextView
+                android:id="@+id/phonelabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+
+                android:text="Phone:"
+                android:textSize="40px" />
+
+            <TextView
+                android:id="@+id/phone_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="092222228" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+
+            android:gravity="bottom"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:src="@drawable/icon_contacts" />
+
+            <TextView
+                android:id="@+id/AddressLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+
+                android:text="Address:"
+                android:textSize="40px" />
+
+            <TextView
+                android:id="@+id/address_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="Ramallah-RokabRamallah-RokabRamallah-RokabRamallah-RokabRamallah-Rokab " />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:gravity="bottom"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_gravity="top"
+
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_about" />
+
+            <TextView
+                android:id="@+id/titleDe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+
+                android:text="Description:"
+                android:textSize="40px" />
+
+            <TextView
+                android:id="@+id/descriptionPlace"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="HELLLLLLLLLLLO" />
+
+        </LinearLayout>
+
 
     </LinearLayout>
 </LinearLayout>
-
 <android.support.design.widget.FloatingActionButton
 android:id="@+id/mapFap"
 android:layout_width="wrap_content"
 android:layout_height="wrap_content"
 android:layout_margin="16dp"
 android:clickable="true"
+android:src="@drawable/icon_marker"
 app:layout_anchor="@id/viewA"
 app:layout_anchorGravity="bottom|right|end"/>
 
 </android.support.design.widget.CoordinatorLayout>
+
+    </ScrollView>

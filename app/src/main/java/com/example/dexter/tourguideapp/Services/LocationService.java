@@ -257,6 +257,7 @@ public class LocationService extends Service {
                 intent.putExtra("Longitude", loc.getLongitude());
                 intent.putExtra("Provider", loc.getProvider());
                 sendBroadcast(intent);
+
             /*final Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
             String Text = "";
             try {
