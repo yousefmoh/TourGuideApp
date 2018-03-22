@@ -3,6 +3,7 @@ package com.example.dexter.tourguideapp.Models;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Dexter on 2/17/2018.
@@ -22,7 +23,27 @@ public class SampleModel {
 
     // private String api;
 
+    public  class  images {
+        String image;
 
+        String id;
+
+        public String getImage() {
+            return image;
+        }
+
+        public void setImage(String image) {
+            this.image = image;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+    }
     public class places {
 
         @SerializedName("name")
@@ -42,6 +63,18 @@ public class SampleModel {
 
         @SerializedName("longitude")
         private  String longitude;
+
+
+        @SerializedName("images")
+        private List<images> Images ;
+
+        public List<images> getImages() {
+            return Images;
+        }
+
+        public void setImages(List<images> images) {
+            Images = images;
+        }
 
         public String getLatitude() {
             return latitude;

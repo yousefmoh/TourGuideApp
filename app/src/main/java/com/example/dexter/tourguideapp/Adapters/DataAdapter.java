@@ -2,6 +2,8 @@ package com.example.dexter.tourguideapp.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
+import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -57,10 +59,21 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
                  Toast.makeText(context,places.get(position).getId()+"",Toast.LENGTH_SHORT).show();
 
+                ArrayList<String> images=new ArrayList<>();
+                for (int i=0;i<places.get(position).getImages().size();i++)
+                 {
+                    // Toast.makeText(context,places.get(position).getImages().get(i).getImage(),Toast.LENGTH_SHORT).show();
+                       images.add(places.get(position).getImages().get(i).getImage());
+
+                 }
+
+
+                 intent.putExtra("ImagesUrls", images);
                  intent.putExtra("ImageUrl",places.get(position).getImageUrl());
                  intent.putExtra("Description",places.get(position).getDescription());
                  intent.putExtra("Latitude",places.get(position).getLatitude());
                  intent.putExtra("Longitude",places.get(position).getLongitude());
+
 
                  view.getContext().startActivity(intent);
 
