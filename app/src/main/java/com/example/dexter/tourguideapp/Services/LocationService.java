@@ -205,7 +205,7 @@ public class LocationService extends Service {
             double nablusLong=35.25444;
             double ramallahlat=31.89964;
             double rammallahlong=35.20422;
-            String City="N";
+            String City="heaven";
 
 
             SharedPreferences.Editor editor = getSharedPreferences("Location", MODE_PRIVATE).edit();
@@ -213,12 +213,12 @@ public class LocationService extends Service {
 
 
 
-            if (distance(Latitude, Longitude, nablusLat, nablusLong) <= 2) { // if distance < 0.1 miles we take locations as equal
+            if (distance(Latitude, Longitude, nablusLat, nablusLong) <= 7) { // if distance < 0.1 miles we take locations as equal
 
                 editor.putInt("CurrentLocation", 3);//1 Nablus
                 City="Nablus";
             }
-            else if (distance(Latitude, Longitude, ramallahlat, rammallahlong) <= 2) {
+            else if (distance(Latitude, Longitude, ramallahlat, rammallahlong) <= 7) {
 
                  editor.putInt("CurrentLocation", 2);//Ramallah
                  City="Ramallah";

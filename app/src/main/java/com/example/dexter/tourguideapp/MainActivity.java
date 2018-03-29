@@ -27,6 +27,8 @@ import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
 import android.Manifest;
 
 import retrofit2.Call;
@@ -46,22 +48,45 @@ public class MainActivity extends AppCompatActivity {
     private   int Id=0;//
     private  int create=0;
     private  boolean FirstTime=true;
+
+    /**
+     * permissions request code
+     */
+    private final static int REQUEST_CODE_ASK_PERMISSIONS = 1;
+
+    /**
+     * Permissions that need to be explicitly requested from end user.
+     */
+    private static final String[] REQUIRED_SDK_PERMISSIONS = new String[] {
+            Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,
+
+
+
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        checkPermissions();
         setContentView(R.layout.activity_main);
 
-        boolean t= checkLocationPermission();
-        SharedPreferences prefs = getSharedPreferences("Creation", MODE_PRIVATE);
-        FirstTime=prefs.getBoolean("FirstTime",true);
-        Toast.makeText(this, FirstTime+ "", Toast.LENGTH_SHORT).show();
 
-        if (FirstTime==false)
-        {
+        start();
 
-             start();
 
-        }
+
+
+       // boolean t= checkLocationPermission();
+        //SharedPreferences prefs = getSharedPreferences("Creation", MODE_PRIVATE);
+       // FirstTime=prefs.getBoolean("FirstTime",true);
+       // Toast.makeText(this, FirstTime+ "", Toast.LENGTH_SHORT).show();
+
+      //  if (FirstTime==false)
+       // {
+
+       //      start();
+
+      //  }
 
        // start();
 
@@ -91,10 +116,10 @@ public class MainActivity extends AppCompatActivity {
 
          startService(new Intent(this,LocationService.class));
 
-
          SharedPreferences prefs = getSharedPreferences("Location", MODE_PRIVATE);
 
          Id=prefs.getInt("CurrentLocation",3);
+
          Toast.makeText(this,Id+"",Toast.LENGTH_SHORT).show();
 
          if(Id==2){
@@ -130,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
 */
     }
 
-
+/*
  @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -168,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
-
+*/
     private void initViews(int id){
         recyclerView = (RecyclerView)findViewById(R.id.card_recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -220,6 +245,57 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+
+
+
+
+
+
+
+    protected void checkPermissions() {
+        final List<String> missingPermissions = new ArrayList<String>();
+// check all required dynamic permissions
+        for (final String permission : REQUIRED_SDK_PERMISSIONS) {
+            final int result = ContextCompat.checkSelfPermission(this, permission);
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                missingPermissions.add(permission);
+            }
+        }
+        if (!missingPermissions.isEmpty()) {
+// request all missing permissions
+            final String[] permissions = missingPermissions
+                    .toArray(new String[missingPermissions.size()]);
+            ActivityCompat.requestPermissions(this, permissions, REQUEST_CODE_ASK_PERMISSIONS);
+        } else {
+            final int[] grantResults = new int[REQUIRED_SDK_PERMISSIONS.length];
+            Arrays.fill(grantResults, PackageManager.PERMISSION_GRANTED);
+            onRequestPermissionsResult(REQUEST_CODE_ASK_PERMISSIONS, REQUIRED_SDK_PERMISSIONS,
+                    grantResults);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_ASK_PERMISSIONS:
+                for (int index = permissions.length - 1; index >= 0; --index) {
+                    if (grantResults[index] != PackageManager.PERMISSION_GRANTED) {
+// exit the app if one permission is not granted
+                        Toast.makeText(this, "Required permission '" + permissions[index]
+                                + "' not granted, exiting", Toast.LENGTH_LONG).show();
+                        finish();
+                        return;
+                    }
+                }
+// all permissions were granted
+                break;
+        }
+    }
+
+
+
 
 
 
