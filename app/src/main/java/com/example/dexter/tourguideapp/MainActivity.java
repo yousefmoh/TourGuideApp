@@ -2,6 +2,8 @@ package com.example.dexter.tourguideapp;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,8 +17,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.dexter.tourguideapp.Adapters.DataAdapter;
@@ -44,10 +51,13 @@ public class MainActivity extends AppCompatActivity {
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private RecyclerView recyclerView;
     private ArrayList<places> data;
+    private Toolbar toolbar;
     private DataAdapter adapter;
+    SearchManager searchManager;
     private ProgressDialog progressDialog;
     LocationManager locationManager;
     String provider;
+    SearchView searchView;
     private   int Id=0;//
     private  int create=0;
     private  boolean FirstTime=true;
@@ -79,11 +89,11 @@ public class MainActivity extends AppCompatActivity {
         progressDialog.setMessage("Loading...");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.show(); // Display Progress Dialog
+        toolbar=(Toolbar) findViewById(R.id.custom_toolbar);
+        setSupportActionBar(toolbar);
+       // toolbar.inflateMenu(R.menu.main);
 
-
-
-            start();
+        start();
 
 
 
@@ -130,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
 
          Id=prefs.getInt("CurrentLocation",3);
 
-         Toast.makeText(this,Id+"",Toast.LENGTH_SHORT).show();
+         //Toast.makeText(this,Id+"",Toast.LENGTH_SHORT).show();
 
          if(Id==2){
              Toast.makeText(this,"Ramallah",Toast.LENGTH_SHORT).show();
@@ -141,8 +151,12 @@ public class MainActivity extends AppCompatActivity {
          }
 
          initViews(Id);
+        /* prefs=getSharedPreferences("LocationN", MODE_PRIVATE);
+         Id=prefs.getInt("CurrentLocation",3);
+         Toast.makeText(this,Id+"",Toast.LENGTH_SHORT).show();
+*/
 
-         progressDialog.dismiss(); // Display Progress Dialog
+         //   progressDialog.dismiss(); // Display Progress Dialog
 
      }
 
@@ -173,6 +187,47 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView =
+                (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                Toast.makeText(getApplicationContext(),s+"",Toast.LENGTH_SHORT).show();
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                Toast.makeText(getApplicationContext(),s+"",Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
+
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.search:
+                Toast.makeText(this,"ll",Toast.LENGTH_SHORT).show();
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
     /*
          @Override
             public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -236,6 +291,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void loadJSON(int id){
+        progressDialog.show(); // Display Progress Dialog
 
         Gson gson = new GsonBuilder()
                 .setLenient()
@@ -261,6 +317,7 @@ public class MainActivity extends AppCompatActivity {
                 adapter = new DataAdapter(data,getApplicationContext());
 
                 recyclerView.setAdapter(adapter);
+                progressDialog.dismiss();
             }
 
 
@@ -279,7 +336,15 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+public void  CheckShared()
+{
 
+    SharedPreferences prefs = getSharedPreferences("LocationN", MODE_PRIVATE);
+
+    int x=prefs.getInt("CurrentLocation",3);
+    Toast.makeText(this,x+"  city id",Toast.LENGTH_SHORT).show();
+
+}
 
 
 

@@ -236,6 +236,8 @@ public class LocationService extends Service {
             }
             editor.apply();
 
+
+
             int CurrentLocation=prefs.getInt("CurrentLocation",-2);//LocationId=1
 
             int  notifylocation=prefs.getInt("notifylocation",-1);//LocationId=1
@@ -267,19 +269,7 @@ public class LocationService extends Service {
                 intent.putExtra("Provider", loc.getProvider());
                 sendBroadcast(intent);
 
-            /*final Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
-            String Text = "";
-            try {
-                List<Address> addresses = geocoder.getFromLocation(loc.getLatitude(), loc.getLongitude(), 1);
-                Text = "My current location is: "+addresses.get(0).getAddressLine(0);
 
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-                Text = "My current location is: " +"Latitude = " + loc.getLatitude() + ", Longitude = " + loc.getLongitude();
-            }
-            */
-                //Toast.makeText( getApplicationContext(), "LocationN polled to server", Toast.LENGTH_SHORT).show();
             }
         }
 
