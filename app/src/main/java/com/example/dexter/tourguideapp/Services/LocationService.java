@@ -22,8 +22,10 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.dexter.tourguideapp.LocationN;
 import com.example.dexter.tourguideapp.MainActivity;
 import com.example.dexter.tourguideapp.R;
+
 
 /**
  * Created by Dexter on 2/13/2018.
@@ -36,12 +38,14 @@ public class LocationService extends Service {
         return null;
     }
 
+    public LocationN Location=new LocationN();
 
     public static final String BROADCAST_ACTION = "Hello World";
     private static final int TWO_MINUTES = 10000*60;
     public LocationManager locationManager;
     public MyLocationListener listener;
     public Location previousBestLocation = null;
+
 
     Intent intent;
     int counter = 0;
@@ -208,8 +212,8 @@ public class LocationService extends Service {
             String City="heaven";
 
 
-            SharedPreferences.Editor editor = getSharedPreferences("Location", MODE_PRIVATE).edit();
-            SharedPreferences prefs = getSharedPreferences("Location", MODE_PRIVATE);
+            SharedPreferences.Editor editor = getSharedPreferences("LocationN", MODE_PRIVATE).edit();
+            SharedPreferences prefs = getSharedPreferences("LocationN", MODE_PRIVATE);
 
 
 
@@ -217,11 +221,16 @@ public class LocationService extends Service {
 
                 editor.putInt("CurrentLocation", 3);//1 Nablus
                 City="Nablus";
+
+
+            //    Location.id=2;
             }
             else if (distance(Latitude, Longitude, ramallahlat, rammallahlong) <= 7) {
 
-                 editor.putInt("CurrentLocation", 2);//Ramallah
-                 City="Ramallah";
+                editor.putInt("CurrentLocation", 2);//Ramallah
+                City="Ramallah";
+
+             //   Location.id=2;
 
 
             }
@@ -270,7 +279,7 @@ public class LocationService extends Service {
                 Text = "My current location is: " +"Latitude = " + loc.getLatitude() + ", Longitude = " + loc.getLongitude();
             }
             */
-                //Toast.makeText( getApplicationContext(), "Location polled to server", Toast.LENGTH_SHORT).show();
+                //Toast.makeText( getApplicationContext(), "LocationN polled to server", Toast.LENGTH_SHORT).show();
             }
         }
 

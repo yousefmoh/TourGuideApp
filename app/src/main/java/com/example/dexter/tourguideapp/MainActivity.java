@@ -1,6 +1,7 @@
 package com.example.dexter.tourguideapp;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.dexter.tourguideapp.Adapters.DataAdapter;
@@ -43,11 +45,13 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ArrayList<places> data;
     private DataAdapter adapter;
+    private ProgressDialog progressDialog;
     LocationManager locationManager;
     String provider;
     private   int Id=0;//
     private  int create=0;
     private  boolean FirstTime=true;
+    private  boolean onResume=false;
 
     /**
      * permissions request code
@@ -70,13 +74,20 @@ public class MainActivity extends AppCompatActivity {
         checkPermissions();
         setContentView(R.layout.activity_main);
 
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Getting Locations :) ");
+        progressDialog.setMessage("Loading...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.show(); // Display Progress Dialog
 
-        start();
+
+
+            start();
 
 
 
-
-       // boolean t= checkLocationPermission();
+        // boolean t= checkLocationPermission();
         //SharedPreferences prefs = getSharedPreferences("Creation", MODE_PRIVATE);
        // FirstTime=prefs.getBoolean("FirstTime",true);
        // Toast.makeText(this, FirstTime+ "", Toast.LENGTH_SHORT).show();
@@ -98,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
         /*
         startService(new Intent(this,LocationService.class));
-        SharedPreferences prefs = getSharedPreferences("Location", MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences("LocationN", MODE_PRIVATE);
 
          Id=prefs.getInt("CurrentLocation",0);
          if(Id==2){
@@ -114,9 +125,8 @@ public class MainActivity extends AppCompatActivity {
 
      public  void start () {
 
-         startService(new Intent(this,LocationService.class));
 
-         SharedPreferences prefs = getSharedPreferences("Location", MODE_PRIVATE);
+         SharedPreferences prefs = getSharedPreferences("LocationN", MODE_PRIVATE);
 
          Id=prefs.getInt("CurrentLocation",3);
 
@@ -132,6 +142,8 @@ public class MainActivity extends AppCompatActivity {
 
          initViews(Id);
 
+         progressDialog.dismiss(); // Display Progress Dialog
+
      }
 
 
@@ -140,68 +152,86 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-/*
-        super.onResume();
-        setContentView(R.layout.activity_main);
-        SharedPreferences prefs = getSharedPreferences("Location", MODE_PRIVATE);
-        Id=prefs.getInt("CurrentLocation",3);
-
-         Toast.makeText(this,"On Resume"+create+"",Toast.LENGTH_SHORT).show();
-
-        if(create==0) {
-            initViews(Id);
+        if(onResume) {
+            setRecycleView();
+            onResume = false;
         }
-*/
+
+
     }
 
-/*
- @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        onResume=true;
 
 
-                    if (ContextCompat.checkSelfPermission(this,
-                            Manifest.permission.ACCESS_FINE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED) {
+    }
 
-                        Toast.makeText(this,"Allow",Toast.LENGTH_SHORT).show();
-                        SharedPreferences.Editor editor = getSharedPreferences("Creation", MODE_PRIVATE).edit();
-                        editor.putBoolean("FirstTime", false);
-                        editor.apply();
+    /*
+         @Override
+            public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+                switch (requestCode) {
+                    case MY_PERMISSIONS_REQUEST_LOCATION: {
+                        // If request is cancelled, the result arrays are empty.
+                        if (grantResults.length > 0
+                                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
 
-                        start();
+                            if (ContextCompat.checkSelfPermission(this,
+                                    Manifest.permission.ACCESS_FINE_LOCATION)
+                                    == PackageManager.PERMISSION_GRANTED) {
+
+                                Toast.makeText(this,"Allow",Toast.LENGTH_SHORT).show();
+                                SharedPreferences.Editor editor = getSharedPreferences("Creation", MODE_PRIVATE).edit();
+                                editor.putBoolean("FirstTime", false);
+                                editor.apply();
 
 
+                                start();
+
+
+                            }
+
+                        } else {
+
+                            Toast.makeText(this,"Denied",Toast.LENGTH_SHORT).show();
+
+                            // permission denied, boo! Disable the
+                            // functionality that depends on this permission.
+
+                        }
+                        return;
                     }
 
-                } else {
-
-                    Toast.makeText(this,"Denied",Toast.LENGTH_SHORT).show();
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-
                 }
-                return;
             }
-
-        }
-    }
-*/
+        */
     private void initViews(int id){
         recyclerView = (RecyclerView)findViewById(R.id.card_recycler_view);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         loadJSON(id);
-    }
 
+
+
+
+    }
+   void setRecycleView(){
+       recyclerView = (RecyclerView)findViewById(R.id.card_recycler_view);
+       recyclerView.setHasFixedSize(true);
+       RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+       recyclerView.setLayoutManager(layoutManager);
+       recyclerView.setAdapter(adapter);
+
+
+   }
 
 
 
@@ -289,6 +319,9 @@ public class MainActivity extends AppCompatActivity {
                         return;
                     }
                 }
+
+                startService(new Intent(this,LocationService.class));
+
 // all permissions were granted
                 break;
         }
@@ -312,8 +345,8 @@ public class MainActivity extends AppCompatActivity {
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
 
                 new AlertDialog.Builder(this)
-                        .setTitle("Location Permission")
-                        .setMessage("Please allow Location Permission ! ")
+                        .setTitle("LocationN Permission")
+                        .setMessage("Please allow LocationN Permission ! ")
                         .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {

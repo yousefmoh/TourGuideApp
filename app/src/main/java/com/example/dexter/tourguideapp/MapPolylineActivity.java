@@ -76,7 +76,7 @@ public class MapPolylineActivity  extends AppCompatActivity implements OnMapRead
         ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        mo = new MarkerOptions().position(new LatLng(0, 0)).title("My Current Location");
+        mo = new MarkerOptions().position(new LatLng(0, 0)).title("My Current LocationN");
         requestLocation();
     }
 
