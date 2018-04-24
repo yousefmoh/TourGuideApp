@@ -58,7 +58,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                  Intent intent = new Intent(view.getContext(), PlaceInformationActivity.class);
 
                  Toast.makeText(context,places.get(position).getId()+"",Toast.LENGTH_SHORT).show();
-
+/*
                 ArrayList<String> images=new ArrayList<>();
                 for (int i=0;i<places.get(position).getImages().size();i++)
                  {
@@ -66,9 +66,10 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                        images.add(places.get(position).getImages().get(i).getImage());
 
                  }
+*/
 
-
-                 intent.putExtra("ImagesUrls", images);
+                 //intent.putExtra("ImagesUrls", images);
+                 intent.putExtra("PlaceId", places.get(position).getId());
                  intent.putExtra("ImageUrl",places.get(position).getImageUrl());
                  intent.putExtra("Description",places.get(position).getDescription());
                  intent.putExtra("Latitude",places.get(position).getLatitude());

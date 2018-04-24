@@ -202,14 +202,30 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                Toast.makeText(getApplicationContext(),s+"",Toast.LENGTH_SHORT).show();
 
-                return false;
+                //Toast.makeText(getApplicationContext(),s+"",Toast.LENGTH_SHORT).show();
+               GetPlacesJson(Id,s);
+               // if (data!=null)
+                //Toast.makeText(getApplicationContext(),data.get(0).getName(),Toast.LENGTH_SHORT).show();
+                return true;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
-                Toast.makeText(getApplicationContext(),s+"",Toast.LENGTH_SHORT).show();
+                //GetPlacesJson(Id,s);
+
+               // Toast.makeText(getApplicationContext(),s+"",Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+
+
+        });
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                 loadJSON(Id);
+
                 return false;
             }
         });
@@ -221,59 +237,20 @@ public class MainActivity extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.search:
-                Toast.makeText(this,"ll",Toast.LENGTH_SHORT).show();
-
+                //Toast.makeText(this,"ll",Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-    /*
-         @Override
-            public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-                switch (requestCode) {
-                    case MY_PERMISSIONS_REQUEST_LOCATION: {
-                        // If request is cancelled, the result arrays are empty.
-                        if (grantResults.length > 0
-                                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-
-                            if (ContextCompat.checkSelfPermission(this,
-                                    Manifest.permission.ACCESS_FINE_LOCATION)
-                                    == PackageManager.PERMISSION_GRANTED) {
-
-                                Toast.makeText(this,"Allow",Toast.LENGTH_SHORT).show();
-                                SharedPreferences.Editor editor = getSharedPreferences("Creation", MODE_PRIVATE).edit();
-                                editor.putBoolean("FirstTime", false);
-                                editor.apply();
-
-
-                                start();
-
-
-                            }
-
-                        } else {
-
-                            Toast.makeText(this,"Denied",Toast.LENGTH_SHORT).show();
-
-                            // permission denied, boo! Disable the
-                            // functionality that depends on this permission.
-
-                        }
-                        return;
-                    }
-
-                }
-            }
-        */
     private void initViews(int id){
-        recyclerView = (RecyclerView)findViewById(R.id.card_recycler_view);
-        recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
+       // recyclerView = (RecyclerView)findViewById(R.id.card_recycler_view);
+       // recyclerView.setHasFixedSize(true);
+       // RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+      // recyclerView.setLayoutManager(layoutManager);
         loadJSON(id);
-
+      //  GetPlacesJson(2,"c");
 
 
 
@@ -315,8 +292,53 @@ public class MainActivity extends AppCompatActivity {
 
 
                 adapter = new DataAdapter(data,getApplicationContext());
+                setRecycleView();
+              //  recyclerView.setAdapter(adapter);
+                progressDialog.dismiss();
+            }
 
-                recyclerView.setAdapter(adapter);
+
+
+            @Override
+            public void onFailure(Call<JSONResponse> call, Throwable t) {
+                Toast.makeText(getApplicationContext(),t.getMessage()+"",Toast.LENGTH_SHORT).show();
+
+                Log.d("Error",t.getMessage());
+            }
+        });
+
+
+    }
+
+
+
+    private void GetPlacesJson(int id,String Key){
+        progressDialog.show(); // Display Progress Dialog
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://snap-project.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        final RequestInterface request = retrofit.create(RequestInterface.class);
+
+        Call<JSONResponse> call = request.getPlaces(id,Key);
+
+        call.enqueue(new Callback<JSONResponse>() {
+            @Override
+            public void onResponse(Call<JSONResponse> call, Response<JSONResponse> response) {
+                JSONResponse jsonResponse = response.body();
+
+
+                data = new ArrayList<>(Arrays.asList(jsonResponse.getPlaces()));
+
+
+                adapter = new DataAdapter(data,getApplicationContext());
+                setRecycleView();
+             //   recyclerView.setAdapter(adapter);
                 progressDialog.dismiss();
             }
 
@@ -336,7 +358,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-public void  CheckShared()
+    public void  CheckShared()
 {
 
     SharedPreferences prefs = getSharedPreferences("LocationN", MODE_PRIVATE);

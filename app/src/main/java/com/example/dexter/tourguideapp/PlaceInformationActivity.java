@@ -21,7 +21,7 @@ public class PlaceInformationActivity extends AppCompatActivity {
     TextView placeDescription;
     FloatingActionButton mapFap;
     ArrayList<String> images;
-    String url,description,Latitude,Longitude;
+    String url,description,Latitude,Longitude,PlaceId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +37,7 @@ public class PlaceInformationActivity extends AppCompatActivity {
             Bundle extras = getIntent().getExtras();
             if(extras == null) {
                 url= null;
+                PlaceId=null;
                 description=null;
                 Latitude=null;
                 Longitude=null;
@@ -44,9 +45,10 @@ public class PlaceInformationActivity extends AppCompatActivity {
             } else {
                 url= extras.getString("ImageUrl");
                 description= extras.getString("Description");
+                PlaceId= extras.getString("PlaceId");
                 Latitude=extras.getString("Latitude");
                 Longitude=extras.getString("Longitude");
-                images = (ArrayList<String>) getIntent().getSerializableExtra("ImagesUrls");
+                //images = (ArrayList<String>) getIntent().getSerializableExtra("ImagesUrls");
 
 
             }
@@ -55,7 +57,7 @@ public class PlaceInformationActivity extends AppCompatActivity {
             description= (String) savedInstanceState.getSerializable("Description");
             Latitude= (String) savedInstanceState.getSerializable("Latitude");
             Longitude= (String) savedInstanceState.getSerializable("Longitude");
-            images = (ArrayList<String>) getIntent().getSerializableExtra("ImagesUrls");
+          //  images = (ArrayList<String>) getIntent().getSerializableExtra("ImagesUrls");
 
 
         }
@@ -69,7 +71,7 @@ public class PlaceInformationActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), GallaryActivity.class);
-                intent.putExtra("ImagesList", images);
+                intent.putExtra("PlaceId", PlaceId);
                 view.getContext().startActivity(intent);
             }
         });
