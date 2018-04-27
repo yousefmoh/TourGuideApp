@@ -219,7 +219,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
 
-
         });
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override

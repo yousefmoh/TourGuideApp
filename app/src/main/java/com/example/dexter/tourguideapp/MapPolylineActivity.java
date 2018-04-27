@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.akexorcist.googledirection.DirectionCallback;
 import com.akexorcist.googledirection.GoogleDirection;
+import com.akexorcist.googledirection.constant.AvoidType;
 import com.akexorcist.googledirection.constant.TransportMode;
 import com.akexorcist.googledirection.model.Direction;
 import com.akexorcist.googledirection.model.Route;
@@ -59,16 +60,37 @@ public class MapPolylineActivity  extends AppCompatActivity implements OnMapRead
    // private LatLng destination = new LatLng(37.7814432, -122.4460177);
 
     private LatLng origin ;//32.22111 35.25444
-    private LatLng destination = new LatLng(32.22111 , 35.25444);////32.22111 35.25444
+    private LatLng destination;// = new LatLng(32.22111 , 35.25444);////32.22111 35.25444
     private LocationManager locationManager;
     MarkerOptions mo;
     Marker marker;
-
+    private String Latitude,Longitude;
+    double dLatitude,dLongitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.maplayout);
+
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras == null) {
+                Latitude=null;
+            } else {
+                Latitude=getIntent().getStringExtra("Latitude");
+                Longitude=getIntent().getStringExtra("Longitude");
+            }
+        } else {
+            Latitude=getIntent().getStringExtra("Latitude");
+            Longitude=getIntent().getStringExtra("Longitude");
+
+        }
+
+          dLatitude  = Double.parseDouble(Latitude);
+         dLongitude= Double.parseDouble(Longitude);
+
+        destination=new LatLng(dLatitude,dLongitude);
+
 
         btnRequestDirection = findViewById(R.id.btn_request_direction);
         btnRequestDirection.setOnClickListener(this);
@@ -96,6 +118,9 @@ public class MapPolylineActivity  extends AppCompatActivity implements OnMapRead
                 .from(origin)
                 .to(destination)
                 .transportMode(TransportMode.DRIVING)
+                .optimizeWaypoints(true)
+                .avoid(AvoidType.HIGHWAYS)
+                .avoid(AvoidType.FERRIES)
                 .execute(this);
     }
 

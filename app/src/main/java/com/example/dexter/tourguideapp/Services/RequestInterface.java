@@ -1,11 +1,15 @@
 package com.example.dexter.tourguideapp.Services;
 
+import com.example.dexter.tourguideapp.Models.ExperiencesModel;
 import com.example.dexter.tourguideapp.Models.Images;
 
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 /**
@@ -25,12 +29,24 @@ public interface RequestInterface {
     Call<JSONResponse> getJSON(@Query("id") int id);
 
 
+    @GET("/tourguideapis/tourguide_experiences.php/")//
+    Call<List<ExperiencesModel>> getExperiences(@Query("id") int id);
+
 
     @GET("/tourguideapis/search.php/")//tourguideapis/search.php?key=old&id=3
     Call<JSONResponse> getPlaces(@Query("id") int id,@Query("key")String key);
 
     @GET("/tourguideapis/images.php/{id}")//tourguideapis/images.php?id=1
     Call<List<Images>> getImages(@Query("id") int id);
+
+
+
+    @FormUrlEncoded
+    @POST("/tourguideapis/insertexp.php")
+    Call<String> insertExp( @Field("name") String name,
+                             @Field("experiences") String experiences,
+                            @Field("id") String id
+    );
 
 
 }
