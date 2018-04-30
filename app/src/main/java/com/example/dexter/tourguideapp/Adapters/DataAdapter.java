@@ -57,19 +57,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
              public void onClick(View view) {
                  Intent intent = new Intent(view.getContext(), PlaceInformationActivity.class);
 
-                 Toast.makeText(context,places.get(position).getId()+"",Toast.LENGTH_SHORT).show();
-/*
-                ArrayList<String> images=new ArrayList<>();
-                for (int i=0;i<places.get(position).getImages().size();i++)
-                 {
-                    // Toast.makeText(context,places.get(position).getImages().get(i).getImage(),Toast.LENGTH_SHORT).show();
-                       images.add(places.get(position).getImages().get(i).getImage());
 
-                 }
-*/
-
-                 //intent.putExtra("ImagesUrls", images);
                  intent.putExtra("PlaceId", places.get(position).getId());
+                 intent.putExtra("name", places.get(position).getName());
+                 intent.putExtra("address", places.get(position).getAddress());
+                 intent.putExtra("phone", places.get(position).getPhone());
+
                  intent.putExtra("ImageUrl",places.get(position).getImageUrl());
                  intent.putExtra("Description",places.get(position).getDescription());
                  intent.putExtra("Latitude",places.get(position).getLatitude());
@@ -80,7 +73,6 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
              }
          });
-     //   Toast.makeText(context,places.get(position).getName()+"",Toast.LENGTH_SHORT).show();
 
     }
 

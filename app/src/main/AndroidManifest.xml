@@ -26,8 +26,13 @@
         </activity>
         <activity android:name=".MapPolylineActivity">
         </activity>
-        <activity android:name=".ExperiencesActivity"
-></activity>
+        <activity android:name=".ExperiencesActivity">
+
+        </activity>
+        <activity android:name=".YourCityActivity">
+
+        </activity>
+        <activity android:name=".AllLocationsActivity"></activity>
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyCpg0kMnFXBelMQTomeQ5Ielt9__bezkZg" />

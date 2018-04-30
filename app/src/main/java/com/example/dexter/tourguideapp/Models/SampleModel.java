@@ -64,6 +64,27 @@ public class SampleModel {
         @SerializedName("longitude")
         private  String longitude;
 
+        @SerializedName("phone")
+        private  String phone;
+
+        @SerializedName("address")
+        private  String Address;
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
+
+        public String getAddress() {
+            return Address;
+        }
+
+        public void setAddress(String address) {
+            Address = address;
+        }
 
         @SerializedName("images")
         private List<images> Images ;

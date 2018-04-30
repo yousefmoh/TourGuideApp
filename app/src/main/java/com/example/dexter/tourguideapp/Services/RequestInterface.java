@@ -28,6 +28,16 @@ public interface RequestInterface {
     @GET("/tourguideapis/tours.php/{id}")//
     Call<JSONResponse> getJSON(@Query("id") int id);
 
+    @GET("/tourguideapis/alltours.php")//
+    Call<JSONResponse> getAllLocations();
+
+    //http://snap-project.com/tourguideapis/searchalllocations.php?key=k
+
+
+    @GET("/tourguideapis/searchalllocations.php/")//tourguideapis/search.php?key=old&id=3
+    Call<JSONResponse> searchAllPlaces(@Query("key")String key);
+
+
 
     @GET("/tourguideapis/tourguide_experiences.php/")//
     Call<List<ExperiencesModel>> getExperiences(@Query("id") int id);
@@ -36,8 +46,13 @@ public interface RequestInterface {
     @GET("/tourguideapis/search.php/")//tourguideapis/search.php?key=old&id=3
     Call<JSONResponse> getPlaces(@Query("id") int id,@Query("key")String key);
 
+
+
     @GET("/tourguideapis/images.php/{id}")//tourguideapis/images.php?id=1
     Call<List<Images>> getImages(@Query("id") int id);
+
+
+
 
 
 

@@ -56,8 +56,6 @@ public class MapPolylineActivity  extends AppCompatActivity implements OnMapRead
     private GoogleMap googleMap;
     private String serverKey = "AIzaSyCpg0kMnFXBelMQTomeQ5Ielt9__bezkZg";
 
-   // private LatLng origin = new LatLng(37.7849569, -122.4068855);//32.22111 35.25444
-   // private LatLng destination = new LatLng(37.7814432, -122.4460177);
 
     private LatLng origin ;//32.22111 35.25444
     private LatLng destination;// = new LatLng(32.22111 , 35.25444);////32.22111 35.25444
@@ -119,8 +117,8 @@ public class MapPolylineActivity  extends AppCompatActivity implements OnMapRead
                 .to(destination)
                 .transportMode(TransportMode.DRIVING)
                 .optimizeWaypoints(true)
-                .avoid(AvoidType.HIGHWAYS)
-                .avoid(AvoidType.FERRIES)
+              //  .avoid(AvoidType.HIGHWAYS)
+                //.avoid(AvoidType.FERRIES)
                 .execute(this);
     }
 

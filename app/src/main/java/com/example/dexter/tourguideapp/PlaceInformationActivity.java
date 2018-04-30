@@ -35,17 +35,21 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PlaceInformationActivity extends AppCompatActivity {
     ImageView placeimage;
-    TextView placeDescription;
+    TextView placeDescription,placeName,placeAddress,placePhone;
     Button WriteExp,Btn;
     FloatingActionButton mapFap,expFap;
     ArrayList<String> images;
-    String url,description,Latitude,Longitude,PlaceId;
+    String url,description,Latitude,Longitude,PlaceId,name,address,phone;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.placelayout);
         placeimage=(ImageView)findViewById(R.id.imagePlace);
         placeDescription=(TextView) findViewById(R.id.descriptionPlace);
+        placeName=(TextView) findViewById(R.id.place_nameTxt);
+        placeAddress=(TextView) findViewById(R.id.address_txt);
+        placePhone=(TextView) findViewById(R.id.phone_txt);
         mapFap=(FloatingActionButton)findViewById(R.id.mapFap);
         expFap=(FloatingActionButton)findViewById(R.id.expFap);
         WriteExp=(Button)findViewById(R.id.WriteExp);
@@ -116,6 +120,8 @@ public class PlaceInformationActivity extends AppCompatActivity {
                 PlaceId=null;
                 description=null;
                 Latitude=null;
+                name=null;
+                address=null;
                 Longitude=null;
                 images=null;
             } else {
@@ -125,7 +131,10 @@ public class PlaceInformationActivity extends AppCompatActivity {
                 PlaceId= extras.getString("PlaceId");
                 Latitude=extras.getString("Latitude");
                 Longitude=extras.getString("Longitude");
-                //images = (ArrayList<String>) getIntent().getSerializableExtra("ImagesUrls");
+                name=extras.getString("name");
+                address=extras.getString("address");
+                phone=extras.getString("phone");
+
 
 
             }
@@ -134,7 +143,9 @@ public class PlaceInformationActivity extends AppCompatActivity {
             description= (String) savedInstanceState.getSerializable("Description");
             Latitude= (String) savedInstanceState.getSerializable("Latitude");
             Longitude= (String) savedInstanceState.getSerializable("Longitude");
-          //  images = (ArrayList<String>) getIntent().getSerializableExtra("ImagesUrls");
+            name= (String) savedInstanceState.getSerializable("name");
+            address= (String) savedInstanceState.getSerializable("address");
+            phone= (String) savedInstanceState.getSerializable("phone");
 
 
         }
@@ -142,8 +153,11 @@ public class PlaceInformationActivity extends AppCompatActivity {
 
 
         Picasso.with(this).load(url).into(placeimage);
-        placeDescription.setText(description);
 
+        placeDescription.setText(description);
+        placeAddress.setText(address);
+        placeName.setText(name);
+        placePhone.setText(phone);
         placeimage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
