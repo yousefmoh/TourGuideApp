@@ -4,9 +4,11 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
@@ -14,6 +16,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -85,48 +88,44 @@ public class AllLocationsActivity extends AppCompatActivity {
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         toolbar=(Toolbar) findViewById(R.id.custom_toolbar);
         setSupportActionBar(toolbar);
-        initViews(0);
-       // toolbar.inflateMenu(R.menu.main);
-
-//        start();
+//        initViews(0);
+        loadJSON(0);
 
 
+      /*  LocalBroadcastManager.getInstance(this).registerReceiver(
+                mMessageReceiver, new IntentFilter("GPSLocationUpdates"));
 
-        // boolean t= checkLocationPermission();
-        //SharedPreferences prefs = getSharedPreferences("Creation", MODE_PRIVATE);
-       // FirstTime=prefs.getBoolean("FirstTime",true);
-       // Toast.makeText(this, FirstTime+ "", Toast.LENGTH_SHORT).show();
-
-      //  if (FirstTime==false)
-       // {
-
-       //      start();
-
-      //  }
-
-       // start();
-
-     /*   if (t)
-        {
-            start();
-        }
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                CityReceiver, new IntentFilter("CityNow"));
 */
 
-        /*
-        startService(new Intent(this,LocationService.class));
-        SharedPreferences prefs = getSharedPreferences("LocationN", MODE_PRIVATE);
-
-         Id=prefs.getInt("CurrentLocation",0);
-         if(Id==2){
-            Toast.makeText(this,"Ramallah",Toast.LENGTH_SHORT).show();
-        }
-        else if(Id==3)
-        {
-            Toast.makeText(this,"Nablus",Toast.LENGTH_SHORT).show();
-        }
-        initViews(Id);*/
-
     }
+
+
+    private BroadcastReceiver CityReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+            String City = intent.getStringExtra("City");
+
+            String CityId = intent.getStringExtra("CityId");
+
+            Toast.makeText(context, City+CityId, Toast.LENGTH_SHORT).show();
+        }
+    };
+
+
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+            String Latitude = intent.getStringExtra("Latitude");
+            String Longitude = intent.getStringExtra("Longitude");
+
+             Toast.makeText(context, Latitude+"Long"+Longitude, Toast.LENGTH_SHORT).show();
+        }
+    };
 
      public  void start () {
 
@@ -161,6 +160,7 @@ public class AllLocationsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
         if(onResume) {
             setRecycleView();
             onResume = false;
@@ -239,12 +239,6 @@ public class AllLocationsActivity extends AppCompatActivity {
     }
 
     private void initViews(int id){
-       // recyclerView = (RecyclerView)findViewById(R.id.card_recycler_view);
-       // recyclerView.setHasFixedSize(true);
-       // RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
-      // recyclerView.setLayoutManager(layoutManager);
-        loadJSON(id);
-      //  GetPlacesJson(2,"c");
 
 
 
@@ -284,6 +278,11 @@ public class AllLocationsActivity extends AppCompatActivity {
 
                 data = new ArrayList<>(Arrays.asList(jsonResponse.getPlaces()));
 
+                for(int i=0;i<data.size();i++)
+                {
+
+
+                }
 
                 adapter = new DataAdapter(data,getApplicationContext());
                 setRecycleView();
@@ -303,6 +302,28 @@ public class AllLocationsActivity extends AppCompatActivity {
 
 
     }
+
+
+    private double distance(double lat1, double lng1, double lat2, double lng2) {
+
+        double earthRadius = 3958.75; // in miles, change to 6371 for kilometer output
+
+        double dLat = Math.toRadians(lat2-lat1);
+        double dLng = Math.toRadians(lng2-lng1);
+
+        double sindLat = Math.sin(dLat / 2);
+        double sindLng = Math.sin(dLng / 2);
+
+        double a = Math.pow(sindLat, 2) + Math.pow(sindLng, 2)
+                * Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2));
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+        double dist = earthRadius * c;
+
+        return dist; // output distance, in MILES
+    }
+
 
 
 

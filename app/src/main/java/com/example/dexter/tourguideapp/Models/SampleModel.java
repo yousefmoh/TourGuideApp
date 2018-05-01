@@ -46,6 +46,11 @@ public class SampleModel {
     }
     public class places {
 
+
+       private double Distance;
+
+
+
         @SerializedName("name")
         private String name;
 
@@ -69,6 +74,15 @@ public class SampleModel {
 
         @SerializedName("address")
         private  String Address;
+
+
+        public double getDistance() {
+            return Distance;
+        }
+
+        public void setDistance(double distance) {
+            Distance = distance;
+        }
 
         public String getPhone() {
             return phone;

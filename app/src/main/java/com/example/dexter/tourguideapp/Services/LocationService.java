@@ -19,6 +19,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -171,6 +172,7 @@ public class LocationService extends Service {
 
     public  void notifyLocation(String City){
 
+        //SentCityToActivity(City);
 
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -198,17 +200,26 @@ public class LocationService extends Service {
     }
 
 
+    public   void SentCityToActivity(String City,int id) {
+        Intent intent = new Intent("CityNow");
+        intent.putExtra("City",City);
+        intent.putExtra("CityId",id+"");
+
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+    }
+
 
     public class MyLocationListener implements LocationListener {
 
 
-        public void onLocationChanged(final Location loc) {
+   public void onLocationChanged(final Location loc) {
             double Latitude = loc.getLatitude();
             double Longitude = loc.getLongitude();
             double nablusLat=32.22111;
             double nablusLong=35.25444;
             double ramallahlat=31.89964;
             double rammallahlong=35.20422;
+            int cityid=0;
             String City="heaven";
 
 
@@ -220,21 +231,23 @@ public class LocationService extends Service {
             if (distance(Latitude, Longitude, nablusLat, nablusLong) <= 7) { // if distance < 0.1 miles we take locations as equal
 
                 editor.putInt("CurrentLocation", 3);//1 Nablus
+                cityid=3;
                 City="Nablus";
 
-
-            //    Location.id=2;
             }
             else if (distance(Latitude, Longitude, ramallahlat, rammallahlong) <= 7) {
 
                 editor.putInt("CurrentLocation", 2);//Ramallah
+                cityid=2;
                 City="Ramallah";
 
-             //   Location.id=2;
 
 
             }
-            editor.apply();
+
+       SentCityToActivity(City,cityid);
+
+       editor.apply();
 
 
 
@@ -248,13 +261,9 @@ public class LocationService extends Service {
 
             if (notifylocation!=CurrentLocation) {
 
-
                 editor.putInt("notifylocation",CurrentLocation);
-
                 editor.apply();
-
-                  notifylocation=prefs.getInt("notifylocation",-1);//LocationId=1
-             //   Toast.makeText(getApplicationContext(),notifylocation+"  ___After___ " + CurrentLocation,Toast.LENGTH_SHORT).show();
+                notifylocation=prefs.getInt("notifylocation",-1);//LocationId=1
                 notifyLocation(City);
 
             }
@@ -267,11 +276,28 @@ public class LocationService extends Service {
                 intent.putExtra("Latitude", loc.getLatitude());
                 intent.putExtra("Longitude", loc.getLongitude());
                 intent.putExtra("Provider", loc.getProvider());
+
+                sendMessageToActivity(loc.getLatitude(),loc.getLongitude());
                 sendBroadcast(intent);
+
+
 
 
             }
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         public void onProviderDisabled(String provider) {
             Toast.makeText(getApplicationContext(), "Gps Disabled", Toast.LENGTH_SHORT).show();
@@ -286,6 +312,14 @@ public class LocationService extends Service {
         public void onStatusChanged(String provider, int status, Bundle extras) {
 
         }
+
+        private  void sendMessageToActivity(double Latitude,double Longitude) {
+            Intent intent = new Intent("GPSLocationUpdates");
+            intent.putExtra("Latitude", Latitude+"");
+            intent.putExtra("Longitude", Longitude+"");
+            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+        }
+
 
 
     }

@@ -4,9 +4,11 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
@@ -14,6 +16,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -26,6 +29,7 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.dexter.tourguideapp.Adapters.DataAdapter;
+import com.example.dexter.tourguideapp.Models.SampleModel;
 import com.example.dexter.tourguideapp.Models.SampleModel.places;
 import com.example.dexter.tourguideapp.Services.JSONResponse;
 import com.example.dexter.tourguideapp.Services.LocationService;
@@ -33,8 +37,11 @@ import com.example.dexter.tourguideapp.Services.RequestInterface;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import retrofit2.Call;
@@ -59,7 +66,8 @@ public class YourCityActivity extends AppCompatActivity {
     private  int create=0;
     private  boolean FirstTime=true;
     private  boolean onResume=false;
-
+    double UserLong,UserLat;
+     Boolean bflag=false;
     /**
      * permissions request code
      */
@@ -87,46 +95,42 @@ public class YourCityActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
        // toolbar.inflateMenu(R.menu.main);
 
-        start();
+
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                LocationReceiver, new IntentFilter("GPSLocationUpdates"));
 
 
 
-        // boolean t= checkLocationPermission();
-        //SharedPreferences prefs = getSharedPreferences("Creation", MODE_PRIVATE);
-       // FirstTime=prefs.getBoolean("FirstTime",true);
-       // Toast.makeText(this, FirstTime+ "", Toast.LENGTH_SHORT).show();
+      progressDialog.show();
 
-      //  if (FirstTime==false)
-       // {
 
-       //      start();
 
-      //  }
-
-       // start();
-
-     /*   if (t)
-        {
-            start();
-        }
-*/
-
-        /*
-        startService(new Intent(this,LocationService.class));
-        SharedPreferences prefs = getSharedPreferences("LocationN", MODE_PRIVATE);
-
-         Id=prefs.getInt("CurrentLocation",0);
-         if(Id==2){
-            Toast.makeText(this,"Ramallah",Toast.LENGTH_SHORT).show();
-        }
-        else if(Id==3)
-        {
-            Toast.makeText(this,"Nablus",Toast.LENGTH_SHORT).show();
-        }
-        initViews(Id);*/
 
     }
 
+
+    private BroadcastReceiver LocationReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+            String Latitude = intent.getStringExtra("Latitude");
+            String Longitude = intent.getStringExtra("Longitude");
+            UserLat=Double.parseDouble(Latitude);
+            UserLong=Double.parseDouble(Longitude);
+            if(bflag==false)
+            {
+                //progressDialog.dismiss();
+                start();
+                bflag=true;
+
+            }
+
+           // start();
+
+           // Toast.makeText(context, UserLat+"Long"+UserLong, Toast.LENGTH_SHORT).show();
+        }
+    };
      public  void start () {
 
 
@@ -259,9 +263,48 @@ public class YourCityActivity extends AppCompatActivity {
    }
 
 
+   public  void SortData()
+   {
+
+       double nablusLat=32.22111;
+       double nablusLong=35.25444;
+
+        DecimalFormat df = new DecimalFormat(".######");
+        double userlat= Double.parseDouble( df.format(UserLat));
+        double userlong= Double.parseDouble( df.format(UserLong));
+       for (int i =0;i<data.size();i++)
+       {
+
+           double distance= distance(userlat,userlong,Double.parseDouble( data.get(i).getLatitude()),Double.parseDouble(data.get(i).getLongitude()));
+
+          Toast.makeText(this,userlat+"",Toast.LENGTH_SHORT).show();
+
+           data.get(i).setDistance(distance);
+
+       }
+
+       Collections.sort(data, new Comparator<places>() {
+           @Override
+           public int compare(places t1, places t2) {
+               return Double.compare(t1.getDistance(), t2.getDistance());
+           }
+       });
+
+       for (int i =0;i<data.size();i++)
+       {
+
+
+           Toast.makeText(this,data.get(i).getDistance()+" Sorted",Toast.LENGTH_SHORT).show();
+
+       }
+
+
+
+
+   }
 
     private void loadJSON(int id){
-        progressDialog.show(); // Display Progress Dialog
+       // progressDialog.show(); // Display Progress Dialog
 
         Gson gson = new GsonBuilder()
                 .setLenient()
@@ -283,6 +326,12 @@ public class YourCityActivity extends AppCompatActivity {
 
                 data = new ArrayList<>(Arrays.asList(jsonResponse.getPlaces()));
 
+                SortData();
+
+
+
+
+
 
                 adapter = new DataAdapter(data,getApplicationContext());
                 setRecycleView();
@@ -303,6 +352,27 @@ public class YourCityActivity extends AppCompatActivity {
 
     }
 
+
+
+    private double distance(double lat1, double lng1, double lat2, double lng2) {
+
+        double earthRadius = 3958.75; // in miles, change to 6371 for kilometer output
+
+        double dLat = Math.toRadians(lat2-lat1);
+        double dLng = Math.toRadians(lng2-lng1);
+
+        double sindLat = Math.sin(dLat / 2);
+        double sindLng = Math.sin(dLng / 2);
+
+        double a = Math.pow(sindLat, 2) + Math.pow(sindLng, 2)
+                * Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2));
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+        double dist = earthRadius * c;
+
+        return dist; // output distance, in MILES
+    }
 
 
     private void GetPlacesJson(int id,String Key){

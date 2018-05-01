@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
      * Permissions that need to be explicitly requested from end user.
      */
     private static final String[] REQUIRED_SDK_PERMISSIONS = new String[] {
-            Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CALL_PHONE
     };
 
     @Override
