@@ -1,9 +1,13 @@
 package com.example.dexter.tourguideapp;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -15,14 +19,22 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.dexter.tourguideapp.Models.ResponseModel;
 import com.example.dexter.tourguideapp.Services.RequestInterface;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.obsez.android.lib.filechooser.ChooserDialog;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,37 +47,45 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PlaceInformationActivity extends AppCompatActivity {
     ImageView placeimage;
-    TextView placeDescription,placeName,placeAddress,placePhone;
-    Button WriteExp,Btn;
-    FloatingActionButton mapFap,expFap;
+    TextView placeDescription, placeName, placeAddress, placePhone;
+    Button WriteExp, AddPhotoBtn;
+    FloatingActionButton mapFap, expFap;
     ArrayList<String> images;
-    String url,description,Latitude,Longitude,PlaceId,name,address,phone;
+    String url, description, Latitude, Longitude, PlaceId, name, address, phone;
+    String _path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.placelayout);
-        placeimage=(ImageView)findViewById(R.id.imagePlace);
-        placeDescription=(TextView) findViewById(R.id.descriptionPlace);
-        placeName=(TextView) findViewById(R.id.place_nameTxt);
-        placeAddress=(TextView) findViewById(R.id.address_txt);
-        placePhone=(TextView) findViewById(R.id.phone_txt);
-        mapFap=(FloatingActionButton)findViewById(R.id.mapFap);
-        expFap=(FloatingActionButton)findViewById(R.id.expFap);
-        WriteExp=(Button)findViewById(R.id.WriteExp);
-        Btn=(Button)findViewById(R.id.AddPhoto);
+        placeimage = (ImageView) findViewById(R.id.imagePlace);
+        placeDescription = (TextView) findViewById(R.id.descriptionPlace);
+        placeName = (TextView) findViewById(R.id.place_nameTxt);
+        placeAddress = (TextView) findViewById(R.id.address_txt);
+        placePhone = (TextView) findViewById(R.id.phone_txt);
+        mapFap = (FloatingActionButton) findViewById(R.id.mapFap);
+        expFap = (FloatingActionButton) findViewById(R.id.expFap);
+        WriteExp = (Button) findViewById(R.id.WriteExp);
+        AddPhotoBtn = (Button) findViewById(R.id.AddPhoto);
 
 
-
-
-
-
-
-
-        Btn.setOnClickListener(new View.OnClickListener() {
+        AddPhotoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                new ChooserDialog().with(view.getContext())
+                        .withFilter(false, false, "jpg", "jpeg", "png")
+                        .withStartFile(_path)
+                        .withResources(R.string.title_choose, R.string.title_choose, R.string.dialog_cancel)
+                        .withChosenListener(new ChooserDialog.Result() {
+                            @Override
+                            public void onChoosePath(String path, File pathFile) {
+                                Toast.makeText(PlaceInformationActivity.this, path, Toast.LENGTH_SHORT).show();
 
+                                uploadFile(path, getRandomName());
+                            }
+                        })
+                        .build()
+                        .show();
 
             }
         });
@@ -81,7 +101,7 @@ public class PlaceInformationActivity extends AppCompatActivity {
                 nameEditText.setHint("Please Write your Name");
 
 
-                final LinearLayout Layout=new LinearLayout(view.getContext());
+                final LinearLayout Layout = new LinearLayout(view.getContext());
                 Layout.setOrientation(LinearLayout.VERTICAL);
 
                 Layout.addView(nameEditText);
@@ -96,7 +116,7 @@ public class PlaceInformationActivity extends AppCompatActivity {
 
                         String experienceText = expEdittext.getText().toString();
                         String nameText = nameEditText.getText().toString();
-                        InsertExp(nameText,experienceText,PlaceId);
+                        InsertExp(nameText, experienceText, PlaceId);
                     }
                 });
 
@@ -112,44 +132,41 @@ public class PlaceInformationActivity extends AppCompatActivity {
         });
 
 
-
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
-            if(extras == null) {
-                url= null;
-                PlaceId=null;
-                description=null;
-                Latitude=null;
-                name=null;
-                address=null;
-                Longitude=null;
-                images=null;
+            if (extras == null) {
+                url = null;
+                PlaceId = null;
+                description = null;
+                Latitude = null;
+                name = null;
+                address = null;
+                Longitude = null;
+                images = null;
             } else {
 
-                url= extras.getString("ImageUrl");
-                description= extras.getString("Description");
-                PlaceId= extras.getString("PlaceId");
-                Latitude=extras.getString("Latitude");
-                Longitude=extras.getString("Longitude");
-                name=extras.getString("name");
-                address=extras.getString("address");
-                phone=extras.getString("phone");
-
+                url = extras.getString("ImageUrl");
+                description = extras.getString("Description");
+                PlaceId = extras.getString("PlaceId");
+                Latitude = extras.getString("Latitude");
+                Longitude = extras.getString("Longitude");
+                name = extras.getString("name");
+                address = extras.getString("address");
+                phone = extras.getString("phone");
 
 
             }
         } else {
-            url= (String) savedInstanceState.getSerializable("ImageUrl");
-            description= (String) savedInstanceState.getSerializable("Description");
-            Latitude= (String) savedInstanceState.getSerializable("Latitude");
-            Longitude= (String) savedInstanceState.getSerializable("Longitude");
-            name= (String) savedInstanceState.getSerializable("name");
-            address= (String) savedInstanceState.getSerializable("address");
-            phone= (String) savedInstanceState.getSerializable("phone");
+            url = (String) savedInstanceState.getSerializable("ImageUrl");
+            description = (String) savedInstanceState.getSerializable("Description");
+            Latitude = (String) savedInstanceState.getSerializable("Latitude");
+            Longitude = (String) savedInstanceState.getSerializable("Longitude");
+            name = (String) savedInstanceState.getSerializable("name");
+            address = (String) savedInstanceState.getSerializable("address");
+            phone = (String) savedInstanceState.getSerializable("phone");
 
 
         }
-
 
 
         Picasso.with(this).load(url).into(placeimage);
@@ -158,6 +175,30 @@ public class PlaceInformationActivity extends AppCompatActivity {
         placeAddress.setText(address);
         placeName.setText(name);
         placePhone.setText(phone);
+
+
+        placePhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                //callIntent.setData(Uri.parse(phone));
+                callIntent.setData(Uri.parse("tel:"+phone));
+                if (ActivityCompat.checkSelfPermission(view.getContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                startActivity(callIntent);
+
+            }
+        });
+
+
         placeimage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -191,6 +232,76 @@ public class PlaceInformationActivity extends AppCompatActivity {
 
 
     }
+
+
+
+
+
+
+
+
+
+
+
+    protected String getRandomName() {
+        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder salt = new StringBuilder();
+        Random rnd = new Random();
+        while (salt.length() < 8) { // length of the random string.
+            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+            salt.append(SALTCHARS.charAt(index));
+        }
+        String saltStr = salt.toString();
+        return saltStr;
+
+    }
+
+    private String  uploadFile(String path, final String filename)
+    {
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+        OkHttpClient client = new OkHttpClient();
+
+        Map<String, RequestBody> map = new HashMap<>();
+        File file = new File(path);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
+        final String extension = file.getName().split("\\.")[1];
+
+        map.put("file\"; filename=\"" + filename+ "."+extension + "\"", requestBody);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://snap-project.com/")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client)
+                .build();
+        final RequestInterface request = retrofit.create(RequestInterface.class);
+
+        Call<ResponseModel> call = request.uploadFile(map,Integer.parseInt(PlaceId));
+        call.enqueue(new Callback<ResponseModel>() {
+            @Override
+            public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+                ResponseModel responsem=response.body();
+                Toast.makeText(getApplicationContext(), responsem.getMessage()+"",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), responsem.getSuccess()+"",Toast.LENGTH_SHORT).show();
+               // String result = "http://snap-project.com/insuranceapis/uploads/" + Fname + "." + extension;
+
+
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseModel> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), t.getMessage()+"",Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
+        return  "";
+
+    }
+
+
 
 
 
