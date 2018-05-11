@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.example.dexter.tourguideapp.Adapters.AppDatabase;
 import com.example.dexter.tourguideapp.Adapters.DataAdapter;
 import com.example.dexter.tourguideapp.Models.SampleModel.places;
 import com.example.dexter.tourguideapp.Services.LocationService;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private  int create=0;
     private  boolean FirstTime=true;
     private  boolean onResume=false;
+    AppDatabase db;
     private Button AllLocationBtb,AboutUsbtn,YourCityBtn,NotesBtn;
     /**
      * permissions request code
@@ -63,6 +65,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+       // AgentAsyncTask task=new AgentAsyncTask();
+        //task.execute();
+
+
+
         checkPermissions();
         setContentView(R.layout.main_layout);
         AllLocationBtb=(Button)findViewById(R.id.alllocationsBtn);
@@ -84,6 +91,13 @@ public class MainActivity extends AppCompatActivity {
            @Override
            public void onClick(View view) {
 
+              /* UserModel user=new UserModel();
+               user.setFirstName("jack");
+               user.setLastName("jesus");
+               db.userDao().insertAll(user);
+              List<UserModel> users= db.userDao().getAll();
+              Toast.makeText(getApplicationContext(),users.get(0).getFirstName()+"",Toast.LENGTH_SHORT).show();*/
+
            }
        });
 
@@ -100,7 +114,11 @@ public class MainActivity extends AppCompatActivity {
        NotesBtn.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
-
+               Intent intent = new Intent(view.getContext(), NotesActivity.class);
+               startActivity(intent);
+/* db = Room.databaseBuilder(getApplicationContext(),
+                AppDatabase.class, "UsersNotesDb").allowMainThreadQueries().build();
+* */
            }
        });
 
