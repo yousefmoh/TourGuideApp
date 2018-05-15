@@ -67,6 +67,7 @@ public class YourCityActivity extends AppCompatActivity {
     private  boolean FirstTime=true;
     private  boolean onResume=false;
     double UserLong,UserLat;
+    String TheCity="";
      Boolean bflag=false;
     /**
      * permissions request code
@@ -93,7 +94,6 @@ public class YourCityActivity extends AppCompatActivity {
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         toolbar=(Toolbar) findViewById(R.id.custom_toolbar);
         setSupportActionBar(toolbar);
-       // toolbar.inflateMenu(R.menu.main);
 
 
 
@@ -116,30 +116,35 @@ public class YourCityActivity extends AppCompatActivity {
             // Get extra data included in the Intent
             String Latitude = intent.getStringExtra("Latitude");
             String Longitude = intent.getStringExtra("Longitude");
+             TheCity = intent.getStringExtra("City");
+             Id = intent.getIntExtra("NewCityId",0);
+
             UserLat=Double.parseDouble(Latitude);
             UserLong=Double.parseDouble(Longitude);
             if(bflag==false)
             {
                 //progressDialog.dismiss();
+              // Toast.makeText(context,TheCity+"",Toast.LENGTH_SHORT).show();
+              // Toast.makeText(context,Id+"",Toast.LENGTH_SHORT).show();
+
                 start();
                 bflag=true;
 
             }
 
-           // start();
 
-           // Toast.makeText(context, UserLat+"Long"+UserLong, Toast.LENGTH_SHORT).show();
         }
     };
      public  void start () {
 
 
-         SharedPreferences prefs = getSharedPreferences("LocationN", MODE_PRIVATE);
+
+         /*SharedPreferences prefs = getSharedPreferences("LocationN", MODE_PRIVATE);
 
          Id=prefs.getInt("CurrentLocation",3);
 
          //Toast.makeText(this,Id+"",Toast.LENGTH_SHORT).show();
-
+*/
          if(Id==2){
              Toast.makeText(this,"Ramallah",Toast.LENGTH_SHORT).show();
          }
@@ -149,12 +154,8 @@ public class YourCityActivity extends AppCompatActivity {
          }
 
          initViews(Id);
-        /* prefs=getSharedPreferences("LocationN", MODE_PRIVATE);
-         Id=prefs.getInt("CurrentLocation",3);
-         Toast.makeText(this,Id+"",Toast.LENGTH_SHORT).show();
-*/
 
-         //   progressDialog.dismiss(); // Display Progress Dialog
+
 
      }
 
@@ -242,12 +243,8 @@ public class YourCityActivity extends AppCompatActivity {
     }
 
     private void initViews(int id){
-       // recyclerView = (RecyclerView)findViewById(R.id.card_recycler_view);
-       // recyclerView.setHasFixedSize(true);
-       // RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
-      // recyclerView.setLayoutManager(layoutManager);
+
         loadJSON(id);
-      //  GetPlacesJson(2,"c");
 
 
 
@@ -277,7 +274,7 @@ public class YourCityActivity extends AppCompatActivity {
 
            double distance= distance(userlat,userlong,Double.parseDouble( data.get(i).getLatitude()),Double.parseDouble(data.get(i).getLongitude()));
 
-          Toast.makeText(this,userlat+"",Toast.LENGTH_SHORT).show();
+        //  Toast.makeText(this,userlat+"",Toast.LENGTH_SHORT).show();
 
            data.get(i).setDistance(distance);
 
@@ -294,7 +291,7 @@ public class YourCityActivity extends AppCompatActivity {
        {
 
 
-           Toast.makeText(this,data.get(i).getDistance()+" Sorted",Toast.LENGTH_SHORT).show();
+          // Toast.makeText(this,data.get(i).getDistance()+" Sorted",Toast.LENGTH_SHORT).show();
 
        }
 

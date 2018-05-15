@@ -256,7 +256,6 @@ public class LocationService extends Service {
             int  notifylocation=prefs.getInt("notifylocation",-1);//LocationId=1
 
 
-           // Toast.makeText(getApplicationContext(),notifylocation+"  ___BeFore___ " + CurrentLocation,Toast.LENGTH_SHORT).show();
 
 
             if (notifylocation!=CurrentLocation) {
@@ -277,7 +276,9 @@ public class LocationService extends Service {
                 intent.putExtra("Longitude", loc.getLongitude());
                 intent.putExtra("Provider", loc.getProvider());
 
-                sendMessageToActivity(loc.getLatitude(),loc.getLongitude());
+
+
+                sendMessageToActivity(loc.getLatitude(),loc.getLongitude(),City,cityid);
                 sendBroadcast(intent);
 
 
@@ -313,10 +314,13 @@ public class LocationService extends Service {
 
         }
 
-        private  void sendMessageToActivity(double Latitude,double Longitude) {
+        private  void sendMessageToActivity(double Latitude,double Longitude,String city,int CityId) {
             Intent intent = new Intent("GPSLocationUpdates");
             intent.putExtra("Latitude", Latitude+"");
             intent.putExtra("Longitude", Longitude+"");
+            intent.putExtra("City",city);
+            intent.putExtra("NewCityId",CityId);
+
             LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
         }
 

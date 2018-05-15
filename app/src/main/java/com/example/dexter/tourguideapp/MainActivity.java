@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -65,62 +66,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // AgentAsyncTask task=new AgentAsyncTask();
+        setContentView(R.layout.splash_layout);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent start = new Intent(MainActivity.this, HomeActivity.class);
+                startActivity(start);
+                finish();
+            }
+        }, 5000);
+
+        // AgentAsyncTask task=new AgentAsyncTask();
         //task.execute();
 
 
-
-        checkPermissions();
-        setContentView(R.layout.main_layout);
-        AllLocationBtb=(Button)findViewById(R.id.alllocationsBtn);
-        AboutUsbtn=(Button)findViewById(R.id.aboutusBtn);
-        YourCityBtn=(Button)findViewById(R.id.cityBtn);
-        NotesBtn=(Button)findViewById(R.id.notesBtn);
-
-
-       AllLocationBtb.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-
-               Intent intent = new Intent(view.getContext(), AllLocationsActivity.class);
-               startActivity(intent);
-           }
-       });
-
-       AboutUsbtn.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-
-              /* UserModel user=new UserModel();
-               user.setFirstName("jack");
-               user.setLastName("jesus");
-               db.userDao().insertAll(user);
-              List<UserModel> users= db.userDao().getAll();
-              Toast.makeText(getApplicationContext(),users.get(0).getFirstName()+"",Toast.LENGTH_SHORT).show();*/
-
-           }
-       });
-
-       YourCityBtn.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-
-               Intent intent = new Intent(view.getContext(), YourCityActivity.class);
-               startActivity(intent);
-
-           }
-       });
-
-       NotesBtn.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               Intent intent = new Intent(view.getContext(), NotesActivity.class);
-               startActivity(intent);
-/* db = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class, "UsersNotesDb").allowMainThreadQueries().build();
-* */
-           }
-       });
 
     }
 
@@ -166,96 +125,12 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    protected void checkPermissions() {
-        final List<String> missingPermissions = new ArrayList<String>();
-// check all required dynamic permissions
-        for (final String permission : REQUIRED_SDK_PERMISSIONS) {
-            final int result = ContextCompat.checkSelfPermission(this, permission);
-            if (result != PackageManager.PERMISSION_GRANTED) {
-                missingPermissions.add(permission);
-            }
-        }
-        if (!missingPermissions.isEmpty()) {
-// request all missing permissions
-            final String[] permissions = missingPermissions
-                    .toArray(new String[missingPermissions.size()]);
-            ActivityCompat.requestPermissions(this, permissions, REQUEST_CODE_ASK_PERMISSIONS);
-        } else {
-            final int[] grantResults = new int[REQUIRED_SDK_PERMISSIONS.length];
-            Arrays.fill(grantResults, PackageManager.PERMISSION_GRANTED);
-            onRequestPermissionsResult(REQUEST_CODE_ASK_PERMISSIONS, REQUIRED_SDK_PERMISSIONS,
-                    grantResults);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
-                                           @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_CODE_ASK_PERMISSIONS:
-                for (int index = permissions.length - 1; index >= 0; --index) {
-                    if (grantResults[index] != PackageManager.PERMISSION_GRANTED) {
-// exit the app if one permission is not granted
-                        Toast.makeText(this, "Required permission '" + permissions[index]
-                                + "' not granted, exiting", Toast.LENGTH_LONG).show();
-                        finish();
-                        return;
-                    }
-                }
-
-                startService(new Intent(this,LocationService.class));
-
-// all permissions were granted
-                break;
-        }
-    }
 
 
 
 
 
 
-
-
-
-
-    public boolean checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-                new AlertDialog.Builder(this)
-                        .setTitle("LocationN Permission")
-                        .setMessage("Please allow LocationN Permission ! ")
-                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                //Prompt the user once explanation has been shown
-                                ActivityCompat.requestPermissions(MainActivity.this,
-                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                        MY_PERMISSIONS_REQUEST_LOCATION);
-                              //  start();
-
-                            }
-                        })
-                        .create()
-                        .show();
-
-
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_LOCATION);
-            }
-            return false;
-        } else {
-            return true;
-        }
-    }
 
 
 }
