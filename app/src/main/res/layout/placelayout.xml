@@ -23,7 +23,7 @@
         android:layout_weight="0.6"
         android:background="@android:color/holo_purple"
         android:orientation="horizontal">
-        <ImageView
+        <com.github.chrisbanes.photoview.PhotoView
             android:layout_width="match_parent"
             android:id="@+id/imagePlace"
             android:scaleType="fitXY"

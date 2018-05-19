@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ import com.esafirm.imagepicker.features.ReturnMode;
 import com.esafirm.imagepicker.model.Image;
 import com.example.dexter.tourguideapp.Models.ResponseModel;
 import com.example.dexter.tourguideapp.Services.RequestInterface;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.obsez.android.lib.filechooser.ChooserDialog;
@@ -52,7 +54,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class PlaceInformationActivity extends AppCompatActivity {
-    ImageView placeimage;
+    PhotoView placeimage;
     TextView placeDescription, placeName, placeAddress, placePhone;
     Button WriteExp, AddPhotoBtn;
     FloatingActionButton mapFap, expFap;
@@ -72,7 +74,7 @@ public class PlaceInformationActivity extends AppCompatActivity {
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
-        placeimage = (ImageView) findViewById(R.id.imagePlace);
+        placeimage = (PhotoView) findViewById(R.id.imagePlace);
         placeDescription = (TextView) findViewById(R.id.descriptionPlace);
         placeName = (TextView) findViewById(R.id.place_nameTxt);
         placeAddress = (TextView) findViewById(R.id.address_txt);
@@ -177,8 +179,12 @@ public class PlaceInformationActivity extends AppCompatActivity {
         }
 
 
-        Picasso.with(this).load(url).into(placeimage);
+       Picasso.with(this).load(url).into(placeimage);
+      // final PhotoView photoView = findViewById(R.id.imagePlace);
 
+      //  Picasso.with(this)
+         //       .load(url)
+           //     .into(photoView);
         placeDescription.setText(description);
         placeAddress.setText(address);
         placeName.setText(name);
@@ -210,9 +216,45 @@ public class PlaceInformationActivity extends AppCompatActivity {
         placeimage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
+
+                AlertDialog.Builder alert = new AlertDialog.Builder(view.getContext());
+
+                final PhotoView photoView = new PhotoView(view.getContext());
+
+                Picasso.with(view.getContext())
+                        .load(url)
+                        .into(photoView);
+
+                final RelativeLayout Layout = new RelativeLayout(view.getContext());
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                Layout.setLayoutParams(params);
+                photoView.setScaleType(ImageView.ScaleType.FIT_XY);
+
+                photoView.setLayoutParams(params);
+                photoView.getLayoutParams().height = params.height;
+                photoView.getLayoutParams().width = params.width;
+
+                // Layout.getLayoutParams().height = 400;
+                //Layout.getLayoutParams().width = 400;
+
+                Layout.addView(photoView);
+                alert.setView(Layout);
+
+
+                alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                    }
+                });
+
+                alert.show().getWindow().setLayout(params.width,params.height);;
+
+
+                /*
                 Intent intent = new Intent(view.getContext(), GallaryActivity.class);
                 intent.putExtra("PlaceId", PlaceId);
-                view.getContext().startActivity(intent);
+                view.getContext().startActivity(intent);*/
             }
         });
         mapFap.setOnClickListener(new View.OnClickListener() {
