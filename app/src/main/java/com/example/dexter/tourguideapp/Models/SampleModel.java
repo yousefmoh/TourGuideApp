@@ -51,6 +51,7 @@ public class SampleModel {
 
 
 
+
         @SerializedName("name")
         private String name;
 

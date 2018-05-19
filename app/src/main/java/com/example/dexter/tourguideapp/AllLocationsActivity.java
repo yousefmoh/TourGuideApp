@@ -11,21 +11,26 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.SearchView;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.example.dexter.tourguideapp.Adapters.DataAdapter;
@@ -88,16 +93,9 @@ public class AllLocationsActivity extends AppCompatActivity {
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         toolbar=(Toolbar) findViewById(R.id.custom_toolbar);
         setSupportActionBar(toolbar);
-//        initViews(0);
-        loadJSON(0);
+        loadJSON();
 
 
-      /*  LocalBroadcastManager.getInstance(this).registerReceiver(
-                mMessageReceiver, new IntentFilter("GPSLocationUpdates"));
-
-        LocalBroadcastManager.getInstance(this).registerReceiver(
-                CityReceiver, new IntentFilter("CityNow"));
-*/
 
     }
 
@@ -181,7 +179,7 @@ public class AllLocationsActivity extends AppCompatActivity {
 
 
     }
-
+/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -218,14 +216,77 @@ public class AllLocationsActivity extends AppCompatActivity {
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                 loadJSON(Id);
-
+                 loadJSON();
                 return false;
             }
         });
         return super.onCreateOptionsMenu(menu);
 
     }
+    */
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        // Inflate the search menu action bar.
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.main, menu);
+
+        // Get the search menu.
+        MenuItem searchMenu = menu.findItem(R.id.search);
+
+        // Get SearchView object.
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenu);
+
+        // Get SearchView autocomplete object.
+        final SearchView.SearchAutoComplete searchAutoComplete = (SearchView.SearchAutoComplete) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        searchAutoComplete.setBackgroundColor(Color.parseColor("#aa47bb"));
+        searchAutoComplete.setTextColor(Color.BLACK);
+        searchAutoComplete.setDropDownBackgroundResource(R.color.searchdropdown);
+
+        // Create a new ArrayAdapter and add data to search auto complete object.
+        String dataArr[] = {"Khan", "Cafe", "test", "Khalil Sakakini"};
+        ArrayAdapter<String> newsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, dataArr);
+        searchAutoComplete.setAdapter(newsAdapter);
+
+        // Listen to search view item on click event.
+        searchAutoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int itemIndex, long id) {
+                String queryString = (String) adapterView.getItemAtPosition(itemIndex);
+                searchAutoComplete.setText("" + queryString);
+
+                //Toast.makeText(view.getContext(), "you clicked " + queryString, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        // Below event is triggered when submit search query.
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                GetPlacesJson(0,query);
+
+              //  Toast.makeText(getApplicationContext(),"Submit",Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                loadJSON();
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
+
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
@@ -248,6 +309,7 @@ public class AllLocationsActivity extends AppCompatActivity {
        recyclerView.setHasFixedSize(true);
        RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
        recyclerView.setLayoutManager(layoutManager);
+
        recyclerView.setAdapter(adapter);
 
 
@@ -255,7 +317,7 @@ public class AllLocationsActivity extends AppCompatActivity {
 
 
 
-    private void loadJSON(int id){
+    private void loadJSON(){
         progressDialog.show(); // Display Progress Dialog
 
         Gson gson = new GsonBuilder()
@@ -266,6 +328,7 @@ public class AllLocationsActivity extends AppCompatActivity {
                 .baseUrl("http://snap-project.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
+
         final RequestInterface request = retrofit.create(RequestInterface.class);
 
         Call<JSONResponse> call = request.getAllLocations();
@@ -278,11 +341,7 @@ public class AllLocationsActivity extends AppCompatActivity {
 
                 data = new ArrayList<>(Arrays.asList(jsonResponse.getPlaces()));
 
-                for(int i=0;i<data.size();i++)
-                {
 
-
-                }
 
                 adapter = new DataAdapter(data,getApplicationContext());
                 setRecycleView();

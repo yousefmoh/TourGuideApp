@@ -35,33 +35,7 @@ import android.Manifest;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-    private RecyclerView recyclerView;
-    private ArrayList<places> data;
-    private Toolbar toolbar;
-    private DataAdapter adapter;
-    SearchManager searchManager;
-    private ProgressDialog progressDialog;
-    LocationManager locationManager;
-    String provider;
-    SearchView searchView;
-    private   int Id=0;//
-    private  int create=0;
-    private  boolean FirstTime=true;
-    private  boolean onResume=false;
-    AppDatabase db;
-    private Button AllLocationBtb,AboutUsbtn,YourCityBtn,NotesBtn;
-    /**
-     * permissions request code
-     */
-    private final static int REQUEST_CODE_ASK_PERMISSIONS = 1;
 
-    /**
-     * Permissions that need to be explicitly requested from end user.
-     */
-    private static final String[] REQUIRED_SDK_PERMISSIONS = new String[] {
-            Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CALL_PHONE
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,10 +49,6 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         }, 5000);
-
-        // AgentAsyncTask task=new AgentAsyncTask();
-        //task.execute();
-
 
 
     }
@@ -120,15 +90,6 @@ public class MainActivity extends AppCompatActivity {
         // Handle item selection
       return  true;
     }
-
-
-
-
-
-
-
-
-
 
 
 

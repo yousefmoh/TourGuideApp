@@ -47,7 +47,6 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, final int position) {
 
 
-
         holder.name.setText(places.get(position).getName());
         holder.place_id.setText(places.get(position).getId());
         Picasso.with(context).load(places.get(position).getImageUrl()).into(holder.placeImage);

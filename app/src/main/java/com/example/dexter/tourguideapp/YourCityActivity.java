@@ -93,19 +93,16 @@ public class YourCityActivity extends AppCompatActivity {
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         toolbar=(Toolbar) findViewById(R.id.custom_toolbar);
+
+
         setSupportActionBar(toolbar);
 
-
-
         LocalBroadcastManager.getInstance(this).registerReceiver(
-                LocationReceiver, new IntentFilter("GPSLocationUpdates"));
+                             LocationReceiver, new IntentFilter("GPSLocationUpdates"));
 
 
 
-      progressDialog.show();
-
-
-
+        progressDialog.show();
 
     }
 
@@ -121,11 +118,9 @@ public class YourCityActivity extends AppCompatActivity {
 
             UserLat=Double.parseDouble(Latitude);
             UserLong=Double.parseDouble(Longitude);
+
             if(bflag==false)
             {
-                //progressDialog.dismiss();
-              // Toast.makeText(context,TheCity+"",Toast.LENGTH_SHORT).show();
-              // Toast.makeText(context,Id+"",Toast.LENGTH_SHORT).show();
 
                 start();
                 bflag=true;
@@ -137,14 +132,13 @@ public class YourCityActivity extends AppCompatActivity {
     };
      public  void start () {
 
-
-
          /*SharedPreferences prefs = getSharedPreferences("LocationN", MODE_PRIVATE);
 
          Id=prefs.getInt("CurrentLocation",3);
 
          //Toast.makeText(this,Id+"",Toast.LENGTH_SHORT).show();
 */
+
          if(Id==2){
              Toast.makeText(this,"Ramallah",Toast.LENGTH_SHORT).show();
          }
@@ -152,8 +146,8 @@ public class YourCityActivity extends AppCompatActivity {
          {
              Toast.makeText(this,"Nablus",Toast.LENGTH_SHORT).show();
          }
-
-         initViews(Id);
+         loadJSON(Id);
+         //initViews(Id);
 
 
 
@@ -202,10 +196,8 @@ public class YourCityActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String s) {
 
-                //Toast.makeText(getApplicationContext(),s+"",Toast.LENGTH_SHORT).show();
                GetPlacesJson(Id,s);
-               // if (data!=null)
-                //Toast.makeText(getApplicationContext(),data.get(0).getName(),Toast.LENGTH_SHORT).show();
+
                 return true;
             }
 
@@ -263,8 +255,7 @@ public class YourCityActivity extends AppCompatActivity {
    public  void SortData()
    {
 
-       double nablusLat=32.22111;
-       double nablusLong=35.25444;
+
 
         DecimalFormat df = new DecimalFormat(".######");
         double userlat= Double.parseDouble( df.format(UserLat));
@@ -274,7 +265,6 @@ public class YourCityActivity extends AppCompatActivity {
 
            double distance= distance(userlat,userlong,Double.parseDouble( data.get(i).getLatitude()),Double.parseDouble(data.get(i).getLongitude()));
 
-        //  Toast.makeText(this,userlat+"",Toast.LENGTH_SHORT).show();
 
            data.get(i).setDistance(distance);
 
@@ -287,13 +277,9 @@ public class YourCityActivity extends AppCompatActivity {
            }
        });
 
-       for (int i =0;i<data.size();i++)
-       {
 
 
-          // Toast.makeText(this,data.get(i).getDistance()+" Sorted",Toast.LENGTH_SHORT).show();
 
-       }
 
 
 
@@ -332,7 +318,6 @@ public class YourCityActivity extends AppCompatActivity {
 
                 adapter = new DataAdapter(data,getApplicationContext());
                 setRecycleView();
-              //  recyclerView.setAdapter(adapter);
                 progressDialog.dismiss();
             }
 
@@ -394,7 +379,6 @@ public class YourCityActivity extends AppCompatActivity {
 
 
                 data = new ArrayList<>(Arrays.asList(jsonResponse.getPlaces()));
-
 
                 adapter = new DataAdapter(data,getApplicationContext());
                 setRecycleView();

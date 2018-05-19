@@ -64,10 +64,6 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // AgentAsyncTask task=new AgentAsyncTask();
-        //task.execute();
-
-
 
         checkPermissions();
         setContentView(R.layout.main_layout);
@@ -90,13 +86,6 @@ public class HomeActivity extends AppCompatActivity {
            @Override
            public void onClick(View view) {
 
-              /* UserModel user=new UserModel();
-               user.setFirstName("jack");
-               user.setLastName("jesus");
-               db.userDao().insertAll(user);
-              List<UserModel> users= db.userDao().getAll();
-              Toast.makeText(getApplicationContext(),users.get(0).getFirstName()+"",Toast.LENGTH_SHORT).show();*/
-
            }
        });
 
@@ -115,9 +104,9 @@ public class HomeActivity extends AppCompatActivity {
            public void onClick(View view) {
                Intent intent = new Intent(view.getContext(), NotesActivity.class);
                startActivity(intent);
-/* db = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class, "UsersNotesDb").allowMainThreadQueries().build();
-* */
+
+
+
            }
        });
 

@@ -24,11 +24,10 @@ import retrofit2.http.Query;
 public interface RequestInterface {
 
 
-
-
-//uploadfile
     @GET("/tourguideapis/tours.php/{id}")//
     Call<JSONResponse> getJSON(@Query("id") int id);
+
+
 
     @GET("/tourguideapis/alltours.php")//
     Call<JSONResponse> getAllLocations();
@@ -42,8 +41,7 @@ public interface RequestInterface {
     );
 
 
-
-    @GET("/tourguideapis/searchalllocations.php/")//tourguideapis/search.php?key=old&id=3
+    @GET("/tourguideapis/searchalllocations.php/")//
     Call<JSONResponse> searchAllPlaces(@Query("key")String key);
 
 
@@ -62,14 +60,11 @@ public interface RequestInterface {
 
 
 
-
-
-
     @FormUrlEncoded
     @POST("/tourguideapis/insertexp.php")
-    Call<String> insertExp( @Field("name") String name,
+    Call<String> insertExp(  @Field("name") String name,
                              @Field("experiences") String experiences,
-                            @Field("id") String id
+                             @Field("id") String id
     );
 
 

@@ -80,7 +80,6 @@ public class PlaceInformationActivity extends AppCompatActivity {
                             @Override
                             public void onChoosePath(String path, File pathFile) {
                                 Toast.makeText(PlaceInformationActivity.this, path, Toast.LENGTH_SHORT).show();
-
                                 uploadFile(path, getRandomName());
                             }
                         })
@@ -89,44 +88,34 @@ public class PlaceInformationActivity extends AppCompatActivity {
 
             }
         });
+
         WriteExp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(view.getContext());
-
-
                 final EditText expEdittext = new EditText(view.getContext());
                 final EditText nameEditText = new EditText(view.getContext());
                 expEdittext.setHint("Please Write your Exprience");
                 nameEditText.setHint("Please Write your Name");
-
-
                 final LinearLayout Layout = new LinearLayout(view.getContext());
                 Layout.setOrientation(LinearLayout.VERTICAL);
-
                 Layout.addView(nameEditText);
                 Layout.addView(expEdittext);
-
                 alert.setMessage("Enter Your Experience");
-
                 alert.setView(Layout);
-
                 alert.setPositiveButton("Write ", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-
                         String experienceText = expEdittext.getText().toString();
                         String nameText = nameEditText.getText().toString();
                         InsertExp(nameText, experienceText, PlaceId);
                     }
                 });
-
                 alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                     }
                 });
 
                 alert.show();
-
 
             }
         });
@@ -282,9 +271,6 @@ public class PlaceInformationActivity extends AppCompatActivity {
             public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
                 ResponseModel responsem=response.body();
                 Toast.makeText(getApplicationContext(), responsem.getMessage()+"",Toast.LENGTH_SHORT).show();
-                //Toast.makeText(getActivity(), responsem.getSuccess()+"",Toast.LENGTH_SHORT).show();
-               // String result = "http://snap-project.com/insuranceapis/uploads/" + Fname + "." + extension;
-
 
 
             }

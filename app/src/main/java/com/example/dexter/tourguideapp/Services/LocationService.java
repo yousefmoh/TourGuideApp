@@ -276,8 +276,6 @@ public class LocationService extends Service {
                 intent.putExtra("Longitude", loc.getLongitude());
                 intent.putExtra("Provider", loc.getProvider());
 
-
-
                 sendMessageToActivity(loc.getLatitude(),loc.getLongitude(),City,cityid);
                 sendBroadcast(intent);
 
