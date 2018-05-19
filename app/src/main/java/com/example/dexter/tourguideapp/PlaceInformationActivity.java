@@ -1,11 +1,13 @@
 package com.example.dexter.tourguideapp;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -19,6 +21,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.features.IpCons;
+import com.esafirm.imagepicker.features.ReturnMode;
+import com.esafirm.imagepicker.model.Image;
 import com.example.dexter.tourguideapp.Models.ResponseModel;
 import com.example.dexter.tourguideapp.Services.RequestInterface;
 import com.google.gson.Gson;
@@ -53,11 +59,19 @@ public class PlaceInformationActivity extends AppCompatActivity {
     ArrayList<String> images;
     String url, description, Latitude, Longitude, PlaceId, name, address, phone;
     String _path;
+    private ProgressDialog progressDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.placelayout);
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Uploading File :) ");
+        progressDialog.setMessage("Please Wait...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
         placeimage = (ImageView) findViewById(R.id.imagePlace);
         placeDescription = (TextView) findViewById(R.id.descriptionPlace);
         placeName = (TextView) findViewById(R.id.place_nameTxt);
@@ -67,11 +81,16 @@ public class PlaceInformationActivity extends AppCompatActivity {
         expFap = (FloatingActionButton) findViewById(R.id.expFap);
         WriteExp = (Button) findViewById(R.id.WriteExp);
         AddPhotoBtn = (Button) findViewById(R.id.AddPhoto);
-
+       // ImagePicker.create(this) // Activity or Fragment
+         //       .start();
 
         AddPhotoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //startWithIntent();
+                start();
+                /*
                 new ChooserDialog().with(view.getContext())
                         .withFilter(false, false, "jpg", "jpeg", "png")
                         .withStartFile(_path)
@@ -84,7 +103,7 @@ public class PlaceInformationActivity extends AppCompatActivity {
                             }
                         })
                         .build()
-                        .show();
+                        .show();*/
 
             }
         });
@@ -227,10 +246,36 @@ public class PlaceInformationActivity extends AppCompatActivity {
 
 
 
+    @Override
+    protected void onActivityResult(int requestCode, final int resultCode, Intent data) {
+        if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
+            // Get a list of picked images
+            // or get a single image only
+            Image image = ImagePicker.getFirstImageOrNull(data);
+            uploadFile(image.getPath(), getRandomName());
+
+       //     Toast.makeText(this,image.getPath()+"",Toast.LENGTH_SHORT).show();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
 
+    private void startWithIntent() {
+        startActivityForResult(ImagePicker.create(this)
+                .single()
+                .returnMode(ReturnMode.ALL)
+                .getIntent(this), IpCons.MODE_SINGLE);
+    }
 
 
+    public void start() {
+        ImagePicker imagePicker = ImagePicker.create(this);
+        imagePicker.limit(1) // max images can be selected (99 by default)
+                .showCamera(true) // show camera or not (true by default)
+                .imageDirectory("Camera")   // captured image directory name ("Camera" folder by default)
+                .imageFullDirectory(Environment.getExternalStorageDirectory().getPath()) // can be full path
+                .start(); // start image picker activity with request code
+    }
 
     protected String getRandomName() {
         String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
@@ -247,6 +292,8 @@ public class PlaceInformationActivity extends AppCompatActivity {
 
     private String  uploadFile(String path, final String filename)
     {
+        progressDialog.show(); // Display Progress Dialog
+
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();
@@ -272,12 +319,15 @@ public class PlaceInformationActivity extends AppCompatActivity {
                 ResponseModel responsem=response.body();
                 Toast.makeText(getApplicationContext(), responsem.getMessage()+"",Toast.LENGTH_SHORT).show();
 
+                progressDialog.dismiss(); // Display Progress Dialog
 
             }
 
             @Override
             public void onFailure(Call<ResponseModel> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), t.getMessage()+"",Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss(); // Display Progress Dialog
+
 
             }
         });
