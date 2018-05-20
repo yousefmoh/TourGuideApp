@@ -4,15 +4,20 @@ import android.arch.persistence.room.Room;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
+import android.text.Layout;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,19 +62,26 @@ public class NotesActivity extends AppCompatActivity {
 
 
 
+
                 final AlertDialog.Builder alert = new AlertDialog.Builder(view.getContext());
 
 
                 final EditText noteEdittext = new EditText(view.getContext());
                 noteEdittext.setHint("Please Add a note .");
 
-
                 final LinearLayout Layout = new LinearLayout(view.getContext());
+
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+               //Layout.setLayoutParams(params);
+                noteEdittext.setLayoutParams(params);
+                noteEdittext.setLines(5);
+                noteEdittext.setMaxLines(10);
+                noteEdittext.setVerticalScrollBarEnabled(true);
                 Layout.setOrientation(LinearLayout.VERTICAL);
 
                 Layout.addView(noteEdittext);
 
-                alert.setMessage("Enter Your Experience");
+                alert.setMessage("Enter Your Note");
 
                 alert.setView(Layout);
 
@@ -83,7 +95,7 @@ public class NotesActivity extends AppCompatActivity {
                         db.userDao().insertAll(userModel);
 
                         SetRecycleView();
-                        Toast.makeText(view.getContext(), db.userDao().getAll().get(0).getNote(), Toast.LENGTH_SHORT).show();
+                      //  Toast.makeText(view.getContext(), db.userDao().getAll().get(0).getNote(), Toast.LENGTH_SHORT).show();
 
                         // InsertExp(nameText, experienceText, PlaceId);
                     }
@@ -94,8 +106,7 @@ public class NotesActivity extends AppCompatActivity {
                     }
                 });
 
-                alert.show();
-
+                alert.show().getWindow().setLayout(params.width,params.height);
 
 
 
@@ -123,7 +134,7 @@ public class NotesActivity extends AppCompatActivity {
 
         data = new ArrayList<>(db.userDao().getAll());
 
-        adapter = new NotesAdapter(data,getApplicationContext());
+        adapter = new NotesAdapter(data,getApplicationContext(),db,this);
 
         recyclerView = (RecyclerView)findViewById(R.id.notes_recycler_view);
         recyclerView.setHasFixedSize(true);
