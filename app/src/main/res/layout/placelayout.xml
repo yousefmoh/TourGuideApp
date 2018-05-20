@@ -238,6 +238,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                app:backgroundTint="@color/statusbar"
                 android:clickable="true"
                 android:src="@drawable/icon_marker" />
             <android.support.design.widget.FloatingActionButton
@@ -246,6 +247,8 @@
                 android:layout_margin="16dp"
                 android:clickable="true"
                 android:id="@+id/expFap"
+                app:backgroundTint="@color/statusbar"
+
                 android:fitsSystemWindows="true"
                 android:src="@drawable/icon_contacts"
                 />

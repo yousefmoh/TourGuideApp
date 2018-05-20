@@ -28,55 +28,157 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_height="wrap_content">
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_vertical"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_height="110dp"
+            android:layout_gravity="center_horizontal"
+            >
 
 
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                >
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="70dp"
+                    android:layout_gravity="center"
+                    android:id="@+id/alllocationsBtn"
 
-    <Button
-     android:layout_width="96dp"
-     android:background="@drawable/round_button"
-     android:text="All Locations"
-     android:textColor="#fff"
-     android:id="@+id/alllocationsBtn"
-     android:layout_marginRight="10dp"
-     android:layout_height="96dp" />
+                    android:layout_marginBottom="5dp"
+                    android:layout_height="70dp"
+                    android:src="#aa47bb"/>
 
-        <Button
-            android:layout_width="96dp"
-            android:background="@drawable/round_button"
-            android:textColor="#fff"
-            android:text="Your City"
-            android:id="@+id/cityBtn"
-            android:layout_height="96dp" />
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_gravity="center"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/country" />
 
-    </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="All Locations"
+                    android:layout_marginTop="2dp"
+                    android:typeface="monospace"
+                    android:layout_gravity="center|bottom"
+                    android:layout_height="wrap_content" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginTop="10dp"
-        android:layout_height="wrap_content">
+            </FrameLayout>
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                >
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="70dp"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="5dp"
+                    android:id="@+id/cityBtn"
 
-        <Button
-            android:layout_width="96dp"
-            android:background="@drawable/round_button"
-            android:text="Notes"
-            android:layout_marginRight="10dp"
-            android:textColor="#fff"
-            android:id="@+id/notesBtn"
-            android:layout_height="96dp" />
+                    android:layout_height="70dp"
+                    android:src="#aa47bb"/>
 
-        <Button
-            android:layout_width="96dp"
-            android:background="@drawable/round_button"
-            android:text="About Us"
-            android:textColor="#fff"
-            android:id="@+id/aboutusBtn"
-            android:layout_height="96dp" />
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_gravity="center"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/city_ic" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="City"
+                    android:layout_marginTop="2dp"
+                    android:typeface="monospace"
+                    android:layout_gravity="center|bottom"
+                    android:layout_height="wrap_content" />
+
+            </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_height="110dp"
+            android:layout_gravity="center_horizontal"
+            >
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                >
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="70dp"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="5dp"
+                    android:id="@+id/notesBtn"
+                    android:layout_height="70dp"
+                    android:src="#aa47bb"/>
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_gravity="center"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/notes" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="Notes"
+                    android:layout_marginTop="2dp"
+                    android:typeface="monospace"
+                    android:layout_gravity="center|bottom"
+                    android:layout_height="wrap_content" />
+
+            </FrameLayout>
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                >
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="70dp"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="5dp"
+                    android:layout_height="70dp"
+                    android:id="@+id/aboutusBtn"
+                    android:src="#aa47bb"/>
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_gravity="center"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/aboutus" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="About us"
+                    android:layout_marginTop="2dp"
+                    android:typeface="monospace"
+                    android:layout_gravity="center|bottom"
+                    android:layout_height="wrap_content" />
+
+            </FrameLayout>
+        </LinearLayout>
     </LinearLayout>
 
 

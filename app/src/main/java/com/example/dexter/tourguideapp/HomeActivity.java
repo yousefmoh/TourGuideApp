@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -48,7 +49,7 @@ public class HomeActivity extends AppCompatActivity {
     private  boolean FirstTime=true;
     private  boolean onResume=false;
     AppDatabase db;
-    private Button AllLocationBtb,AboutUsbtn,YourCityBtn,NotesBtn;
+    private ImageView AllLocationBtb,AboutUsbtn,YourCityBtn,NotesBtn;
     /**
      * permissions request code
      */
@@ -67,10 +68,10 @@ public class HomeActivity extends AppCompatActivity {
 
         checkPermissions();
         setContentView(R.layout.main_layout);
-        AllLocationBtb=(Button)findViewById(R.id.alllocationsBtn);
-        AboutUsbtn=(Button)findViewById(R.id.aboutusBtn);
-        YourCityBtn=(Button)findViewById(R.id.cityBtn);
-        NotesBtn=(Button)findViewById(R.id.notesBtn);
+        AllLocationBtb=(ImageView)findViewById(R.id.alllocationsBtn);
+        AboutUsbtn=(ImageView)findViewById(R.id.aboutusBtn);
+        YourCityBtn=(ImageView)findViewById(R.id.cityBtn);
+        NotesBtn=(ImageView)findViewById(R.id.notesBtn);
 
 
        AllLocationBtb.setOnClickListener(new View.OnClickListener() {
@@ -86,8 +87,8 @@ public class HomeActivity extends AppCompatActivity {
            @Override
            public void onClick(View view) {
 
-               Intent intent = new Intent(view.getContext(), AboutUsActivity.class);
-               startActivity(intent);
+             //  Intent intent = new Intent(view.getContext(), AboutUsActivity.class);
+              // startActivity(intent);
            }
        });
 

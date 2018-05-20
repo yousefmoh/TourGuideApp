@@ -173,6 +173,10 @@ public class PlaceInformationActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String experienceText = expEdittext.getText().toString();
                         String nameText = nameEditText.getText().toString();
+                        if(experienceText.trim().isEmpty()) {
+                            Toast.makeText(view.getContext(), "Please insert Experience", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         if(nameText.trim().isEmpty())
                             nameText="Anonymous";
                         InsertExp(nameText, experienceText, PlaceId);
