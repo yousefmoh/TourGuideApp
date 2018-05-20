@@ -1,7 +1,7 @@
 package com.example.dexter.tourguideapp.Services;
 
 import com.example.dexter.tourguideapp.Models.ExperiencesModel;
-import com.example.dexter.tourguideapp.Models.Images;
+import com.example.dexter.tourguideapp.Models.ImagesModel;
 import com.example.dexter.tourguideapp.Models.ResponseModel;
 
 import java.util.List;
@@ -56,7 +56,7 @@ public interface RequestInterface {
 
 
     @GET("/tourguideapis/images.php/{id}")//tourguideapis/images.php?id=1
-    Call<List<Images>> getImages(@Query("id") int id);
+    Call<List<ImagesModel>> getImages(@Query("id") int id);
 
 
 

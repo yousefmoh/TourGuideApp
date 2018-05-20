@@ -23,11 +23,15 @@
         android:layout_weight="0.6"
         android:background="@android:color/holo_purple"
         android:orientation="horizontal">
-        <com.github.chrisbanes.photoview.PhotoView
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/gallery_recycler_view"
+            android:scrollbars="horizontal"
             android:layout_width="match_parent"
-            android:id="@+id/imagePlace"
-            android:scaleType="fitXY"
-            android:layout_height="200dp" />
+            android:layout_height="match_parent"/>
+
+
     </LinearLayout>
 
     <LinearLayout
@@ -96,6 +100,8 @@
                 android:id="@+id/phone_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="#605ae1"
+                android:textStyle="bold"
                 android:layout_marginLeft="10dp"
                 android:text="092222228" />
 

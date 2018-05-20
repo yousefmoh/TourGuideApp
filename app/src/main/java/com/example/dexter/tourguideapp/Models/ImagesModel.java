@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
  */
 
 
-public  class Images {
+public  class ImagesModel {
     @SerializedName("image")
 
     String image;

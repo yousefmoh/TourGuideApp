@@ -9,7 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
 import com.example.dexter.tourguideapp.Adapters.PicassoImageLoader;
-import com.example.dexter.tourguideapp.Models.Images;
+import com.example.dexter.tourguideapp.Models.ImagesModel;
 import com.example.dexter.tourguideapp.Services.RequestInterface;
 import com.veinhorn.scrollgalleryview.MediaInfo;
 import com.veinhorn.scrollgalleryview.ScrollGalleryView;
@@ -30,7 +30,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class GallaryActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ArrayList<String> Images=new ArrayList<>();
-    ArrayList<Images> data=new ArrayList<>();
+    ArrayList<ImagesModel> data=new ArrayList<>();
     private  ScrollGalleryView scrollGalleryView;
     List<MediaInfo> infos;
     String PlaceId="";
@@ -81,11 +81,11 @@ public class GallaryActivity extends AppCompatActivity {
                 .build();
         final RequestInterface request = retrofit.create(RequestInterface.class);
 
-        Call<List<Images>> call = request.getImages(Integer.parseInt(PlaceId));
-        call.enqueue(new Callback<List<Images>>() {
+        Call<List<ImagesModel>> call = request.getImages(Integer.parseInt(PlaceId));
+        call.enqueue(new Callback<List<ImagesModel>>() {
             @Override
-            public void onResponse(Call<List<Images>> call, Response<List<Images>> response) {
-                List<Images> jsonResponse = response.body();
+            public void onResponse(Call<List<ImagesModel>> call, Response<List<ImagesModel>> response) {
+                List<ImagesModel> jsonResponse = response.body();
                 data = new ArrayList<>(jsonResponse);
                 setData();
 
@@ -93,7 +93,7 @@ public class GallaryActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<Images>> call, Throwable t) {
+            public void onFailure(Call<List<ImagesModel>> call, Throwable t) {
                 Toast.makeText(getApplicationContext(),t.getMessage(),Toast.LENGTH_SHORT).show();
             }
         });

@@ -12,13 +12,12 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,17 +25,19 @@ import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.features.IpCons;
 import com.esafirm.imagepicker.features.ReturnMode;
 import com.esafirm.imagepicker.model.Image;
+import com.example.dexter.tourguideapp.Adapters.GallaryAdapter;
+import com.example.dexter.tourguideapp.Adapters.NotesAdapter;
+import com.example.dexter.tourguideapp.Models.ImagesModel;
 import com.example.dexter.tourguideapp.Models.ResponseModel;
 import com.example.dexter.tourguideapp.Services.RequestInterface;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.obsez.android.lib.filechooser.ChooserDialog;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -59,22 +60,40 @@ public class PlaceInformationActivity extends AppCompatActivity {
     Button WriteExp, AddPhotoBtn;
     FloatingActionButton mapFap, expFap;
     ArrayList<String> images;
+
+
     String url, description, Latitude, Longitude, PlaceId, name, address, phone;
     String _path;
-    private ProgressDialog progressDialog;
+    private ProgressDialog progressDialog,LoadDataDailog;
+
+    RecyclerView gallery_recycler_view;
+    ArrayList<ImagesModel> gallarydData=new ArrayList<>();
+    GallaryAdapter gallaryAdapter;//=new GallaryAdapter()
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.placelayout);
+
+        LoadDataDailog = new ProgressDialog(this);
+        LoadDataDailog.setTitle("Loading Data :) ");
+        LoadDataDailog.setMessage("Please Wait...");
+        LoadDataDailog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        LoadDataDailog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        LoadDataDailog.show();
+
+
+
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Uploading File :) ");
         progressDialog.setMessage("Please Wait...");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
-        placeimage = (PhotoView) findViewById(R.id.imagePlace);
+     //   placeimage = (PhotoView) findViewById(R.id.imagePlace);
+
+
         placeDescription = (TextView) findViewById(R.id.descriptionPlace);
         placeName = (TextView) findViewById(R.id.place_nameTxt);
         placeAddress = (TextView) findViewById(R.id.address_txt);
@@ -83,6 +102,7 @@ public class PlaceInformationActivity extends AppCompatActivity {
         expFap = (FloatingActionButton) findViewById(R.id.expFap);
         WriteExp = (Button) findViewById(R.id.WriteExp);
         AddPhotoBtn = (Button) findViewById(R.id.AddPhoto);
+        gallery_recycler_view=(RecyclerView)findViewById(R.id.gallery_recycler_view);
        // ImagePicker.create(this) // Activity or Fragment
          //       .start();
 
@@ -179,7 +199,7 @@ public class PlaceInformationActivity extends AppCompatActivity {
         }
 
 
-       Picasso.with(this).load(url).into(placeimage);
+      // Picasso.with(this).load(url).into(placeimage);
       // final PhotoView photoView = findViewById(R.id.imagePlace);
 
       //  Picasso.with(this)
@@ -189,6 +209,7 @@ public class PlaceInformationActivity extends AppCompatActivity {
         placeAddress.setText(address);
         placeName.setText(name);
         placePhone.setText(phone);
+        loadGallary();
 
 
         placePhone.setOnClickListener(new View.OnClickListener() {
@@ -212,12 +233,10 @@ public class PlaceInformationActivity extends AppCompatActivity {
             }
         });
 
-
+/*
         placeimage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
 
                 AlertDialog.Builder alert = new AlertDialog.Builder(view.getContext());
 
@@ -254,9 +273,11 @@ public class PlaceInformationActivity extends AppCompatActivity {
                 /*
                 Intent intent = new Intent(view.getContext(), GallaryActivity.class);
                 intent.putExtra("PlaceId", PlaceId);
-                view.getContext().startActivity(intent);*/
+                view.getContext().startActivity(intent);///
             }
         });
+
+        */
         mapFap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -414,5 +435,52 @@ public class PlaceInformationActivity extends AppCompatActivity {
 
 
     }
+
+
+    private void loadGallary( ){
+
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://snap-project.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        final RequestInterface request = retrofit.create(RequestInterface.class);
+
+        Call<List<ImagesModel>> call = request.getImages(Integer.parseInt(PlaceId));
+        call.enqueue(new Callback<List<ImagesModel>>() {
+            @Override
+            public void onResponse(Call<List<ImagesModel>> call, Response<List<ImagesModel>> response) {
+                List<ImagesModel> jsonResponse = response.body();
+                gallarydData = new ArrayList<>(jsonResponse);
+                SetGallaryRecycleView();
+             //   setData();
+
+
+            }
+
+            @Override
+            public void onFailure(Call<List<ImagesModel>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(),t.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+    }
+
+    public  void  SetGallaryRecycleView()
+    {
+
+
+        gallaryAdapter = new GallaryAdapter(gallarydData,getApplicationContext(),this);
+
+        gallery_recycler_view.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL);
+        gallery_recycler_view.setLayoutManager(layoutManager);
+        gallery_recycler_view.setAdapter(gallaryAdapter);
+        LoadDataDailog.dismiss();
+
+
+    }
+
 
 }
