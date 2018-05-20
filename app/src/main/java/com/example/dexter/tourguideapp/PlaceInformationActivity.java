@@ -28,6 +28,7 @@ import com.esafirm.imagepicker.features.ReturnMode;
 import com.esafirm.imagepicker.model.Image;
 import com.example.dexter.tourguideapp.Adapters.GallaryAdapter;
 import com.example.dexter.tourguideapp.Adapters.NotesAdapter;
+import com.example.dexter.tourguideapp.Models.GallaryModel;
 import com.example.dexter.tourguideapp.Models.ImagesModel;
 import com.example.dexter.tourguideapp.Models.RateModel;
 import com.example.dexter.tourguideapp.Models.ResponseModel;
@@ -573,6 +574,11 @@ public class PlaceInformationActivity extends AppCompatActivity {
             public void onResponse(Call<List<ImagesModel>> call, Response<List<ImagesModel>> response) {
                 List<ImagesModel> jsonResponse = response.body();
                 gallarydData = new ArrayList<>(jsonResponse);
+
+                ImagesModel model=new ImagesModel();
+                model.setId("999");
+                model.setImage(url);
+                gallarydData.add(model) ;
                 SetGallaryRecycleView();
              //   setData();
 
