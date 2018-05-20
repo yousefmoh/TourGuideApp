@@ -517,8 +517,9 @@ public class PlaceInformationActivity extends AppCompatActivity {
             List<RateModel>rateModels=response.body();
 
 
-            if(rateModels==null||rateModels.get(0).getSum()>1000)
+            if( Float.isNaN(rateModels.get(0).getCount())||Float.isNaN(rateModels.get(0).getSum()))
             {
+                Toast.makeText(PlaceInformationActivity.this,"ss",Toast.LENGTH_SHORT).show();
                 ratetext.setText(0+"");
 
                 return;
