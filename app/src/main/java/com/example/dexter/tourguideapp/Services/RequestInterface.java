@@ -2,6 +2,7 @@ package com.example.dexter.tourguideapp.Services;
 
 import com.example.dexter.tourguideapp.Models.ExperiencesModel;
 import com.example.dexter.tourguideapp.Models.ImagesModel;
+import com.example.dexter.tourguideapp.Models.RateModel;
 import com.example.dexter.tourguideapp.Models.ResponseModel;
 
 import java.util.List;
@@ -28,10 +29,14 @@ public interface RequestInterface {
     Call<JSONResponse> getJSON(@Query("id") int id);
 
 
+    @GET("/tourguideapis/insertrate.php/")//
+    Call<String> InsertRate(@Query("rate") float rate);
+
+    @GET("/tourguideapis/rate.php")//
+    Call<List<RateModel>> GetRateInformaion();
 
     @GET("/tourguideapis/alltours.php")//
     Call<JSONResponse> getAllLocations();
-
 
 
     @Multipart

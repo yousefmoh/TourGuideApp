@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ import com.esafirm.imagepicker.model.Image;
 import com.example.dexter.tourguideapp.Adapters.GallaryAdapter;
 import com.example.dexter.tourguideapp.Adapters.NotesAdapter;
 import com.example.dexter.tourguideapp.Models.ImagesModel;
+import com.example.dexter.tourguideapp.Models.RateModel;
 import com.example.dexter.tourguideapp.Models.ResponseModel;
 import com.example.dexter.tourguideapp.Services.RequestInterface;
 import com.github.chrisbanes.photoview.PhotoView;
@@ -35,6 +37,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,15 +60,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class PlaceInformationActivity extends AppCompatActivity {
     PhotoView placeimage;
     TextView placeDescription, placeName, placeAddress, placePhone;
-    Button WriteExp, AddPhotoBtn;
+    Button WriteExp, AddPhotoBtn,ratebtn;
     FloatingActionButton mapFap, expFap;
     ArrayList<String> images;
+    RatingBar ratebar;
 
 
     String url, description, Latitude, Longitude, PlaceId, name, address, phone;
     String _path;
     private ProgressDialog progressDialog,LoadDataDailog;
-
+    TextView ratetext;
     RecyclerView gallery_recycler_view;
     ArrayList<ImagesModel> gallarydData=new ArrayList<>();
     GallaryAdapter gallaryAdapter;//=new GallaryAdapter()
@@ -95,6 +99,7 @@ public class PlaceInformationActivity extends AppCompatActivity {
 
 
         placeDescription = (TextView) findViewById(R.id.descriptionPlace);
+        ratetext = (TextView) findViewById(R.id.ratetext);
         placeName = (TextView) findViewById(R.id.place_nameTxt);
         placeAddress = (TextView) findViewById(R.id.address_txt);
         placePhone = (TextView) findViewById(R.id.phone_txt);
@@ -102,7 +107,27 @@ public class PlaceInformationActivity extends AppCompatActivity {
         expFap = (FloatingActionButton) findViewById(R.id.expFap);
         WriteExp = (Button) findViewById(R.id.WriteExp);
         AddPhotoBtn = (Button) findViewById(R.id.AddPhoto);
+        ratebtn = (Button) findViewById(R.id.ratebtn);
         gallery_recycler_view=(RecyclerView)findViewById(R.id.gallery_recycler_view);
+        ratebar=(RatingBar) findViewById(R.id.ratebar);
+        ratebar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(view.getContext(),ratebar.getNumStars()+"",Toast.LENGTH_SHORT).show();
+                //ratebar.getNumStars();
+            }
+        });
+        loadRate();
+
+        ratebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                InsertRate(ratebar.getRating());
+
+            }
+        });
+
+
        // ImagePicker.create(this) // Activity or Fragment
          //       .start();
 
@@ -386,6 +411,8 @@ public class PlaceInformationActivity extends AppCompatActivity {
 
                 progressDialog.dismiss(); // Display Progress Dialog
 
+
+
             }
 
             @Override
@@ -402,6 +429,40 @@ public class PlaceInformationActivity extends AppCompatActivity {
 
     }
 
+
+
+    public  void  InsertRate(float rate)
+    {
+
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+        OkHttpClient client = new OkHttpClient();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://snap-project.com/")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client)
+                .build();
+        final RequestInterface request = retrofit.create(RequestInterface.class);
+
+        Call<String> call=request.InsertRate(rate);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+          Toast.makeText(PlaceInformationActivity.this,response.body()+"",Toast.LENGTH_SHORT).show();
+                loadRate();
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
+            }
+        });
+
+
+    }
 
 
 
@@ -434,6 +495,43 @@ public class PlaceInformationActivity extends AppCompatActivity {
 
             }
         });
+
+
+    }
+
+
+
+    private void loadRate( ){
+
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://snap-project.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        final RequestInterface request = retrofit.create(RequestInterface.class);
+
+        Call<List<RateModel>> call = request.GetRateInformaion();
+    call.enqueue(new Callback<List<RateModel>>() {
+        @Override
+        public void onResponse(Call<List<RateModel>> call, Response<List<RateModel>> response) {
+            List<RateModel>rateModels=response.body();
+            //Toast.makeText(PlaceInformationActivity.this,rateModels.get(0).getCount() +
+              //      "sdfsdf"+rateModels.get(0).getSum()+"",Toast.LENGTH_SHORT).show();
+
+            float result=rateModels.get(0).getSum()/rateModels.get(0).getCount();
+            DecimalFormat decimalFormat = new DecimalFormat("#.##");
+            float twoDigitsF = Float.valueOf(decimalFormat.format(result));
+
+            ratetext.setText(twoDigitsF+"");
+        }
+
+        @Override
+        public void onFailure(Call<List<RateModel>> call, Throwable t) {
+            Toast.makeText(PlaceInformationActivity.this,t.getMessage()+"",Toast.LENGTH_SHORT).show();
+
+        }
+    });
+
 
 
     }

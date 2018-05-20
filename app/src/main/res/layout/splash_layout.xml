@@ -2,8 +2,11 @@
 
 <RelativeLayout android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:background="@drawable/splash"
+    android:background="#fff"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-
+<ImageView
+    android:layout_width="match_parent"
+    android:src="@drawable/tripper"
+    android:layout_height="match_parent" />
     </RelativeLayout>
