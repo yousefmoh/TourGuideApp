@@ -30,10 +30,10 @@ public interface RequestInterface {
 
 
     @GET("/tourguideapis/insertrate.php/")//
-    Call<String> InsertRate(@Query("rate") float rate);
+    Call<String> InsertRate(@Query("rate") float rate,@Query("id") int id);
 
     @GET("/tourguideapis/rate.php")//
-    Call<List<RateModel>> GetRateInformaion();
+    Call<List<RateModel>> GetRateInformaion(@Query("id") int id);
 
     @GET("/tourguideapis/alltours.php")//
     Call<JSONResponse> getAllLocations();

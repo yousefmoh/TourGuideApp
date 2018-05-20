@@ -117,7 +117,6 @@ public class PlaceInformationActivity extends AppCompatActivity {
                 //ratebar.getNumStars();
             }
         });
-        loadRate();
 
         ratebtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -228,18 +227,15 @@ public class PlaceInformationActivity extends AppCompatActivity {
 
 
         }
+        loadRate();
 
 
-      // Picasso.with(this).load(url).into(placeimage);
-      // final PhotoView photoView = findViewById(R.id.imagePlace);
 
-      //  Picasso.with(this)
-         //       .load(url)
-           //     .into(photoView);
         placeDescription.setText(description);
         placeAddress.setText(address);
         placeName.setText(name);
         placePhone.setText(phone);
+
         loadGallary();
 
 
@@ -451,7 +447,7 @@ public class PlaceInformationActivity extends AppCompatActivity {
                 .build();
         final RequestInterface request = retrofit.create(RequestInterface.class);
 
-        Call<String> call=request.InsertRate(rate);
+        Call<String> call=request.InsertRate(rate,Integer.parseInt(PlaceId));
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
@@ -514,19 +510,39 @@ public class PlaceInformationActivity extends AppCompatActivity {
                 .build();
         final RequestInterface request = retrofit.create(RequestInterface.class);
 
-        Call<List<RateModel>> call = request.GetRateInformaion();
+        Call<List<RateModel>> call = request.GetRateInformaion(Integer.parseInt(PlaceId));
     call.enqueue(new Callback<List<RateModel>>() {
         @Override
         public void onResponse(Call<List<RateModel>> call, Response<List<RateModel>> response) {
             List<RateModel>rateModels=response.body();
-            //Toast.makeText(PlaceInformationActivity.this,rateModels.get(0).getCount() +
-              //      "sdfsdf"+rateModels.get(0).getSum()+"",Toast.LENGTH_SHORT).show();
 
-            float result=rateModels.get(0).getSum()/rateModels.get(0).getCount();
-            DecimalFormat decimalFormat = new DecimalFormat("#.##");
-            float twoDigitsF = Float.valueOf(decimalFormat.format(result));
 
-            ratetext.setText(twoDigitsF+"");
+            if(rateModels==null||rateModels.get(0).getSum()>1000)
+            {
+                ratetext.setText(0+"");
+
+                return;
+            }
+
+
+            try {
+
+
+                float result = rateModels.get(0).getSum() / rateModels.get(0).getCount();
+
+
+                DecimalFormat decimalFormat = new DecimalFormat("#.##");
+                float twoDigitsF = Float.valueOf(decimalFormat.format(result));
+
+                ratetext.setText(twoDigitsF + "");
+            }
+            catch (Exception ex)
+            {                ratetext.setText(0 + "");
+
+
+            }
+
+
         }
 
         @Override
