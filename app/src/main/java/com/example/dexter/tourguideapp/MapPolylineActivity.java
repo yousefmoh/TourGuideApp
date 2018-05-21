@@ -115,6 +115,13 @@ public class MapPolylineActivity  extends AppCompatActivity implements OnMapRead
 
 
     public void requestDirection() {
+
+        if(origin==null || destination==null)
+        {
+            Toast.makeText(this,origin+""+destination+"",Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Snackbar.make(btnRequestDirection, "Direction Requesting...", Snackbar.LENGTH_SHORT).show();
         GoogleDirection.withServerKey(serverKey)
                 .from(origin)
@@ -169,10 +176,6 @@ public class MapPolylineActivity  extends AppCompatActivity implements OnMapRead
         googleMap.getUiSettings().setCompassEnabled(true);
         googleMap.getUiSettings().setMyLocationButtonEnabled(true);
 
-        Polyline line = googleMap.addPolyline(new PolylineOptions()
-                .add(new LatLng(51.5, -0.1), new LatLng(40.7, -74.0))
-                .width(5)
-                .color(Color.RED));
 
 
 
@@ -249,7 +252,7 @@ public class MapPolylineActivity  extends AppCompatActivity implements OnMapRead
     @Override
     public void onLocationChanged(Location location) {
          origin = new LatLng(location.getLatitude(), location.getLongitude());
-         Toast.makeText(this,origin+"",Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this,origin+"",Toast.LENGTH_SHORT).show();
          marker.setPosition(origin);
          googleMap.moveCamera(CameraUpdateFactory.newLatLng(origin));
     }
