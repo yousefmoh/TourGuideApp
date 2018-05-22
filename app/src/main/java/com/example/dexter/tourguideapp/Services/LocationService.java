@@ -220,7 +220,7 @@ public class LocationService extends Service {
             double ramallahlat=31.89964;
             double rammallahlong=35.20422;
             int cityid=0;
-            String City="heaven";
+            String City="Out Side The current Locations";
 
 
             SharedPreferences.Editor editor = getSharedPreferences("LocationN", MODE_PRIVATE).edit();
