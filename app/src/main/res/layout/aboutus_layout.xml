@@ -17,9 +17,9 @@
     android:layout_height="wrap_content" />
 <TextView
     android:layout_width="match_parent"
-    android:text="Information Information Information Information Information Information Information Information Information Information Information Information Information Information Information Information
- 4Information Information Information Information Information
-Information "
+    android:text="The project consists of an Android application that helps tourists or visitors get to know tourist sites in Nablus and Ramallah.
+     The tourist can also express his opinion on the place and add a reference summary to write a comment or include pictures of the place visited.
+    When a tourist reaches the boundaries of a particular city, he receives notification of his arrival in that city."
     android:layout_marginLeft="20dp"
     android:textStyle="bold"
     android:layout_height="wrap_content" />

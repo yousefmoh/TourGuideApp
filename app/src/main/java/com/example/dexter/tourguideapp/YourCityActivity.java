@@ -251,7 +251,11 @@ public class YourCityActivity extends AppCompatActivity {
         searchAutoComplete.setDropDownBackgroundResource(R.color.searchdropdown);
 
         // Create a new ArrayAdapter and add data to search auto complete object.
-        String dataArr[] = {"Khan", "Cafe", "test", "Khalil Sakakini"};
+        String dataArr[] =
+        {"al-estiqlal park", "Martyrs' Square roundabout", "Harsh 'Redana'", "Khalil Sakakini Culyiral Center",
+                "Harsh 'Gebiya'","Khan alwakaleh","City of Shechem","Jacob's Well","Historical Landmark","Jabal Jirzim",
+                "The Village of Ain Qinya","Saa'et Al-Manarah","Old City Shopping Center","Evangelical Church","Hammam Al-Shifa'",
+                "Ain Pupin area","Raas karkar","Ain Samia","Tomb and tomp of president Abu Ammar","Hammam Al-Sumarah","Yousef shrine","Sabastia"};
         ArrayAdapter<String> newsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, dataArr);
         searchAutoComplete.setAdapter(newsAdapter);
 

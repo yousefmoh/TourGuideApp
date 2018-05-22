@@ -242,8 +242,18 @@ public class LocationService extends Service {
                 City="Ramallah";
 
 
-
             }
+
+           /* else {
+
+                editor.putInt("CurrentLocation", 8);//OutSide
+                City="OutSide Current Locations";
+                cityid=8;
+
+
+
+
+            }*/
 
        SentCityToActivity(City,cityid);
 
